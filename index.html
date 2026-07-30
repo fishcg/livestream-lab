@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;600;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="src/css/app.css?v=20260730-32">
+  <link rel="stylesheet" href="src/css/app.css?v=20260730-33">
 </head>
 <body>
   <div class="noise" aria-hidden="true"></div>
@@ -755,6 +755,32 @@
           <div><b>HTTP-FLV</b><span>CDN 可以代理长连接，但不像 HLS 切片那样依靠文件缓存复用。</span></div>
           <div><b>WebRTC</b><span>大规模观看通常依赖 SFU 或实时边缘网络；多人全互连 P2P 只适合很小规模。</span></div>
         </section>
+        <section class="stage3-realtime-cdn-teacher" aria-labelledby="stage3RealtimeCdnTitle">
+          <header><div><span>WEBRTC CDN</span><h4 id="stage3RealtimeCdnTitle">WebRTC 可以用 CDN，但它不靠缓存旧货</h4></div><p>传统 CDN 像仓库，缓存 HLS 切片供多人重复领取；WebRTC CDN 更像实时接力站，SFU 或边缘节点把刚到的媒体包立刻复制给附近观众。</p></header>
+          <div class="stage3-cdn-models">
+            <article class="cache-model">
+              <div class="stage3-cdn-model-title"><small>HLS CDN</small><b>文件缓存型仓库</b></div>
+              <div class="stage3-cdn-model-map"><span>源站</span><i>→</i><strong><small>CACHE</small>切片只存一份</strong><i>→</i><div><em>观众</em><em>观众</em><em>观众</em></div></div>
+              <p>相同的 m3u8 和媒体切片可以被反复命中。HTTP 请求相对独立，边缘节点不必持续记住每位观众的媒体状态。</p>
+            </article>
+            <article class="realtime-model">
+              <div class="stage3-cdn-model-title"><small>WEBRTC CDN</small><b>实时转发型接力站</b></div>
+              <div class="stage3-cdn-model-map"><span>源站</span><i>→</i><strong><small>EDGE SFU</small>媒体包立即转发</strong><i>→</i><div><em>ICE</em><em>DTLS</em><em>RTCP</em></div></div>
+              <p>每位观众都有独立会话、加密和网络反馈。刚产生的包必须立即处理；太晚到达的包即使完整，也可能已经失去播放价值。</p>
+            </article>
+          </div>
+          <div class="stage3-rtc-cost-drivers">
+            <article><small>01 · CONNECTION</small><b>连接状态</b><p>每位观众都要维护 ICE 路径、DTLS 密钥和 SRTP 收发状态。</p></article>
+            <article><small>02 · PACKET RATE</small><b>小包实时处理</b><p>大量媒体包持续到达，节点要加密、排队并尽快转发，不能慢慢批处理。</p></article>
+            <article><small>03 · FEEDBACK</small><b>一人一套路况</b><p>RTCP、NACK 和 PLI 让节点面对每位观众不同的丢包、抖动和码率选择。</p></article>
+            <article><small>04 · RELAY</small><b>TURN 中继</b><p>直连失败时媒体完整经过中继，增加服务器出口带宽和额外跳数。</p></article>
+          </div>
+          <div class="stage3-rtc-cost-console">
+            <div><small>沿用上方观看人数</small><b id="stage3RtcViewerCost"></b></div><i>×</i><div><small>单路码率</small><b>4 Mbps</b></div><i>=</i><div><small>两种方案都要送出的总下行</small><b id="stage3RtcEgressCost"></b></div>
+            <aside><span>WebRTC 节点还要同时维护</span><strong id="stage3RtcSessionCost"></strong><small>实时会话与各自的网络反馈</small></aside>
+          </div>
+          <p class="stage3-rtc-cost-truth"><b>真正的成本差别：</b>带宽总量并不会凭空变多，WebRTC 贵在这些字节必须通过大量有状态、低等待、持续反馈的实时会话送达。SFU 通常只转发压缩媒体，不会把每路视频都解码再编码。</p>
+        </section>
         <div class="knowledge-callout"><span class="callout-icon" data-icon="warning"></span><p><b>P2P 不是免费 CDN。</b>它受 NAT、终端上传能力、运营商网络、隐私与内容保护影响，必须有 CDN 兜底、调度控制和真实播放质量监控。</p></div>
       </article>
 
@@ -1139,6 +1165,6 @@
 
   <div class="toast" id="toast" role="status"></div>
   <div id="certificateRoot"></div>
-  <script type="module" src="src/js/app.js?v=20260730-26"></script>
+  <script type="module" src="src/js/app.js?v=20260730-27"></script>
 </body>
 </html>

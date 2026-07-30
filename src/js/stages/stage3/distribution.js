@@ -36,6 +36,12 @@ function calculateTraffic(viewers, p2pShare) {
   return { total, origin, cdn: centralized - origin, peer };
 }
 
+function renderRealtimeCdnCost(viewers) {
+  $('#stage3RtcViewerCost').textContent = `${viewers.toLocaleString('zh-CN')} 位观众`;
+  $('#stage3RtcEgressCost').textContent = formatTraffic(viewers * BITRATE_MBPS / 1000);
+  $('#stage3RtcSessionCost').textContent = `${viewers.toLocaleString('zh-CN')} 条`;
+}
+
 function renderDistribution() {
   const viewers = Number($('#stage3ViewerCount').value);
   const p2pShare = Number($('#stage3P2pShare').value) / 100;
@@ -54,6 +60,7 @@ function renderDistribution() {
   $('#stage3CdnTraffic').textContent = formatTraffic(traffic.cdn);
   $('#stage3PeerTraffic').textContent = formatTraffic(traffic.peer);
   $('#stage3DistributionHint').textContent = `${mode.label}：${mode.hint} 本实验忽略协议开销、地域和峰值，只用于理解流量由谁承担。`;
+  renderRealtimeCdnCost(viewers);
 
   $$('#stage3DistributionModes button').forEach((button) => {
     const active = button.dataset.mode === currentMode;
