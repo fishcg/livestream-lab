@@ -1,5 +1,10 @@
 const STORAGE_KEY = 'livelab-state-v1';
-const initialState = { completedStages: [] };
+const initialState = {
+  completedStages: [],
+  certificateName: '',
+  certificateIssuedAt: '',
+  certificatePresented: false
+};
 
 function readState() {
   try {
