@@ -4,7 +4,7 @@ import { initClassificationLab } from './classification.js';
 import { initGopLab } from './gop.js';
 import { initJourneyTutor } from './journey.js';
 import { initPipelineLab } from './pipeline.js';
-import { initStage1Quiz } from './quiz.js?v=20260729-3';
+import { initStage1Quiz } from './quiz.js?v=20260730-4';
 import { initTerminologyLab } from './terminology.js?v=20260730-4';
 
 function initWaveform() {

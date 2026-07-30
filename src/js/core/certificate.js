@@ -114,7 +114,7 @@ function renderCertificateCanvas(name, issuedAt) {
   context.textAlign = 'center';
   context.fillStyle = '#ff6a2a';
   context.font = '500 21px "DM Mono", monospace';
-  drawCenteredText(context, 'SIGNAL VERIFIED · 05 / 05 STAGES COMPLETE', 263);
+  drawCenteredText(context, 'SCORE 100 / 100 · 05 / 05 STAGES COMPLETE', 263);
   context.fillStyle = '#161a1e';
   context.font = '900 67px "Noto Sans SC", sans-serif';
   drawCenteredText(context, '直播技术学习结业证书', 352);
@@ -130,10 +130,21 @@ function renderCertificateCanvas(name, issuedAt) {
 
   context.fillStyle = '#53575a';
   context.font = '500 28px "Noto Sans SC", sans-serif';
-  drawCenteredText(context, '已完成 LiveLab 五阶段直播推拉流课程及全部阶段考试', 642);
+  drawCenteredText(context, '已完成 LiveLab 五阶段直播推拉流课程及全部阶段考试', 632);
   context.fillStyle = '#81817c';
   context.font = '400 21px "Noto Sans SC", sans-serif';
-  drawCenteredText(context, '能够从信号、推流、分发、播放与观测角度解释并搭建完整直播链路', 688);
+  drawCenteredText(context, '能够从信号、推流、分发、播放与观测角度解释并搭建完整直播链路', 674);
+
+  context.fillStyle = '#11161b';
+  context.fillRect(420, 710, 760, 66);
+  context.textAlign = 'left';
+  context.fillStyle = '#a6ef67';
+  context.font = '900 30px "Noto Sans SC", sans-serif';
+  context.fillText('总成绩 100 分', 448, 743);
+  context.textAlign = 'right';
+  context.fillStyle = '#45d5e8';
+  context.font = '500 18px "DM Mono", monospace';
+  context.fillText('HTTPS://LIVELAB.ACGAY.CN', 1152, 743);
 
   const cardGap = 16;
   const cardWidth = 262;
@@ -141,14 +152,14 @@ function renderCertificateCanvas(name, issuedAt) {
   COURSE_STAGES.forEach(([index, label], cardIndex) => {
     const x = startX + cardIndex * (cardWidth + cardGap);
     context.fillStyle = cardIndex === COURSE_STAGES.length - 1 ? '#11161b' : '#e2ded3';
-    context.fillRect(x, 757, cardWidth, 116);
+    context.fillRect(x, 800, cardWidth, 100);
     context.fillStyle = cardIndex === COURSE_STAGES.length - 1 ? '#45d5e8' : '#ff6a2a';
     context.font = '500 17px "DM Mono", monospace';
     context.textAlign = 'left';
-    context.fillText(index, x + 22, 789);
+    context.fillText(index, x + 22, 827);
     context.fillStyle = cardIndex === COURSE_STAGES.length - 1 ? '#ffffff' : '#22272a';
     context.font = '700 24px "Noto Sans SC", sans-serif';
-    context.fillText(label, x + 22, 833);
+    context.fillText(label, x + 22, 866);
   });
 
   context.strokeStyle = '#c9c4b8';
@@ -164,7 +175,7 @@ function renderCertificateCanvas(name, issuedAt) {
   context.textAlign = 'right';
   context.fillStyle = '#161a1e';
   context.font = '700 20px "DM Mono", monospace';
-  context.fillText('LIVELAB.ACGAY.CN / SIGNAL LOCKED', 1508, 984);
+  context.fillText('HTTPS://LIVELAB.ACGAY.CN / SIGNAL LOCKED', 1508, 984);
   context.fillStyle = '#8b8a84';
   context.font = '400 16px "Noto Sans SC", sans-serif';
   context.fillText('直播技术速通实验室', 1508, 1023);
@@ -206,7 +217,7 @@ function shareCertificate() {
   if (!file) return;
   const shareData = {
     title: 'LiveLab 直播技术学习结业证书',
-    text: `${normalizedName()} 已完成 LiveLab 五阶段直播技术课程。`,
+    text: `${normalizedName()} 以 100 分完成 LiveLab 五阶段直播技术课程：https://livelab.acgay.cn`,
     files: [file]
   };
   if (navigator.share && navigator.canShare?.({ files: [file] })) {
@@ -257,8 +268,8 @@ function mountCertificate() {
       <div class="certificate-modal">
         <button class="certificate-close" id="certificateClose" type="button" aria-label="关闭奖状">×</button>
         <section class="certificate-controls">
-          <span>05 / 05 · SIGNAL VERIFIED</span>
-          <h2 id="certificateDialogTitle">五个阶段，全部点亮</h2>
+          <span>100 / 100 · 05 / 05 · SIGNAL VERIFIED</span>
+          <h2 id="certificateDialogTitle">五个阶段，满分完成</h2>
           <p>输入你希望展示的昵称。奖状只在当前浏览器生成，不会上传昵称。</p>
           <label for="certificateName">奖状署名</label>
           <input id="certificateName" type="text" maxlength="24" autocomplete="nickname" placeholder="输入昵称" aria-describedby="certificateNameHint">
@@ -273,16 +284,17 @@ function mountCertificate() {
           <article class="certificate-paper" id="certificatePaper" aria-label="LiveLab 直播技术学习结业证书预览">
             <div class="certificate-paper-top"><b>LIVE<span>LAB</span></b><small>STREAMING TECHNOLOGY / COURSE COMPLETION</small></div>
             <div class="certificate-paper-body">
-              <span>SIGNAL VERIFIED · 05 / 05 STAGES COMPLETE</span>
+              <span>SCORE 100 / 100 · 05 / 05 STAGES COMPLETE</span>
               <h3>直播技术学习结业证书</h3>
               <small>兹证明</small>
               <strong class="placeholder" id="certificatePreviewName">你的昵称</strong>
               <p>已完成 LiveLab 五阶段直播推拉流课程及全部阶段考试</p>
+              <div class="certificate-achievement"><span><small>FINAL SCORE</small><b>100 分</b></span><span><small>COURSE WEBSITE</small><b>livelab.acgay.cn</b></span></div>
               <div class="certificate-stage-list">
                 ${COURSE_STAGES.map(([index, label]) => `<div><small>${index}</small><b>${label}</b></div>`).join('')}
               </div>
             </div>
-            <footer><span id="certificatePreviewDate"></span><b>LIVELAB.ACGAY.CN / SIGNAL LOCKED</b></footer>
+            <footer><span id="certificatePreviewDate"></span><b>HTTPS://LIVELAB.ACGAY.CN / SIGNAL LOCKED</b></footer>
           </article>
         </div>
       </div>

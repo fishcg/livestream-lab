@@ -891,7 +891,11 @@ body.certificate-open { overflow: hidden; }
 .certificate-paper-body > strong { min-width: 58%; margin: 1.5% 0 2%; padding: 0 4% 1.2%; border-bottom: 3px solid var(--orange); font-size: clamp(26px,4.2vw,64px); line-height: 1.2; overflow-wrap: anywhere; }
 .certificate-paper-body > strong.placeholder { color: #aaa69d; }
 .certificate-paper-body > p { margin: 0; color: #575a59; font-size: clamp(9px,1.2vw,18px); }
-.certificate-stage-list { display: grid; grid-template-columns: repeat(5,1fr); gap: 1.2%; width: 92%; margin-top: 4%; }
+.certificate-achievement { display: grid; grid-template-columns: .7fr 1.3fr; width: 72%; margin-top: 2.2%; background: #11161b; text-align: left; }
+.certificate-achievement > span { padding: 2.4% 5%; }.certificate-achievement > span + span { border-left: 1px solid #343b40; }
+.certificate-achievement small { display: block; color: #7f8a91; font: 500 clamp(5px,.62vw,9px) var(--mono); }
+.certificate-achievement b { display: block; margin-top: 2%; color: var(--green); font-size: clamp(10px,1.3vw,20px); }.certificate-achievement > span + span b { color: var(--cyan); font: 500 clamp(7px,.9vw,14px) var(--mono); }
+.certificate-stage-list { display: grid; grid-template-columns: repeat(5,1fr); gap: 1.2%; width: 92%; margin-top: 2.5%; }
 .certificate-stage-list div { padding: 4.2% 7%; background: #dfdbd0; text-align: left; }
 .certificate-stage-list div:last-child { background: #11161b; color: #fff; }
 .certificate-stage-list small { display: block; color: var(--orange); font: 500 clamp(6px,.72vw,11px) var(--mono); }

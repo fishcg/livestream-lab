@@ -190,19 +190,19 @@ export const PLAYBACK_INCIDENTS = [
 ];
 
 export const STAGE3_QUIZ = [
-  { question: '播放器拿到网络媒体后，为什么还需要缓冲？', options: ['抵抗数据到达间隔波动', '自动增加像素数量', '替代视频编码器'], answer: 'a' },
-  { question: 'HLS 的核心传输模型是什么？', options: ['一个永不结束的 FLV 响应', '播放清单加一系列媒体切片', '只通过 UDP 发送 RTP'], answer: 'b' },
-  { question: 'm3u8 清单中的 EXTINF 通常描述什么？', options: ['下一媒体切片的时长', '服务器 CPU 使用率', 'WebRTC 加密密钥'], answer: 'a' },
-  { question: '缩短 HLS 切片时长通常会带来什么变化？', options: ['请求与清单刷新更频繁，但有机会降低等待', '完全不再需要 CDN', '编码格式自动变成 AV1'], answer: 'a' },
-  { question: 'HTTP-FLV 为什么常被比作一根持续水管？', options: ['它持续通过一个长 HTTP 响应传送 FLV 数据', '它把直播切成许多独立 ZIP', '它只传音频不传视频'], answer: 'a' },
-  { question: 'flv.js 收到 FLV Tag 后，通常怎样把媒体交给 MSE？', options: ['拆出音视频并转成 fMP4 片段，再追加到 SourceBuffer', '把原始 FLV Tag 不加处理地交给显卡', '先生成 WebRTC Offer'], answer: 'a' },
-  { question: 'HTTP-FLV 播放延迟不断增加，首先值得看什么？', options: ['缓冲是否持续堆积', '显示器分辨率', '主播昵称'], answer: 'a' },
-  { question: 'WebRTC 中 ICE 的主要职责是什么？', options: ['选择可连通的网络路径', '把视频切成 TS 文件', '生成 HLS 清单'], answer: 'a' },
-  { question: 'WebRTC 什么时候可能需要 TURN？', options: ['直连被 NAT 或防火墙阻挡时', '每次 HLS 请求 404 时', '只要视频是 H.264'], answer: 'a' },
-  { question: 'DTLS/SRTP 在 WebRTC 链路里主要解决什么？', options: ['媒体安全传输', '网页排版', 'CDN 文件缓存'], answer: 'a' },
-  { question: '为什么万人直播通常需要 CDN 边缘节点？', options: ['让观众就近取流并分散源站连接与带宽压力', '让所有观众直接连接主播电脑', '把视频自动改成更高分辨率'], answer: 'a' },
-  { question: '直播 P2P 与 CDN 更准确的关系是什么？', options: ['P2P 在合适环境中分担部分流量，CDN 继续负责稳定供给和兜底', '启用 P2P 后可以永久删除源站与 CDN', 'P2P 只负责修改视频编码格式'], answer: 'a' },
-  { question: '播放器请求 m3u8 返回 404，第一步应做什么？', options: ['检查路径和 HLS 输出是否存在', '增加播放缓冲', '降低屏幕亮度'], answer: 'a' },
-  { question: '浏览器报 CORS 错误，问题最可能在哪一层？', options: ['跨域响应策略', 'GOP 中 I 帧数量', '麦克风采样率'], answer: 'a' },
-  { question: '“低延迟”和“不卡顿”为什么需要权衡？', options: ['缓冲越小越实时，但抵抗抖动的余量也越小', '协议名字越短延迟越低', '清晰度越高一定越不卡'], answer: 'a' }
+  { question: '传统 HLS 使用 4 秒切片，播放器至少等到 3 片后起播。仅计算切片缓冲，起播位置大约落后现场多少？', options: ['4 秒', '12 秒', '16 毫秒'], answer: 'b' },
+  { question: 'm3u8 中 MEDIA-SEQUENCE 从 120 变为 123，而播放器仍请求 120，最可能说明什么？', options: ['播放器落在旧窗口，需要刷新清单并追赶新切片', '视频编码已经从 H.264 自动变为 AAC', 'WebRTC 的 ICE 候选收集失败'], answer: 'a' },
+  { question: '把 HLS 切片从 4 秒缩短到 1 秒，为什么不能保证延迟一定降到四分之一？', options: ['切片时长只影响音量，不影响请求', '播放器会自动增加四倍分辨率', '清单刷新、请求开销、GOP 对齐和播放器缓冲仍会累积'], answer: 'c' },
+  { question: 'HTTP-FLV 网络响应持续有数据，但 MSE SourceBuffer 没有追加内容。故障更可能在哪一段？', options: ['CDN DNS 一定解析失败', 'flv.js 解封装或转封装到 fMP4 的过程', '主播端 ICE 没有找到 TURN'], answer: 'b' },
+  { question: 'HTTP-FLV 播放始终流畅，但缓冲从 2 秒涨到 18 秒。应该怎样判断？', options: ['消费速度长期落后于到达速度，播放器正在远离直播边缘', '只要不卡顿，端到端延迟就不会变化', 'FLV Tag 数量增加代表分辨率一定提高'], answer: 'a' },
+  { question: '为什么不能把原始 FLV Tag 直接理解成“交给 MSE 就能播放”？', options: ['MSE 只支持音频，完全不能处理视频', 'MSE 必须先建立 WebRTC Offer', 'flv.js 通常要拆出音视频并重新封装为浏览器接受的 fMP4'], answer: 'c' },
+  { question: 'WebRTC 已完成信令交换，却一直停在 ICE checking。第一检查动作是什么？', options: ['把 HLS EXTINF 改短', '检查候选收集、STUN/TURN、UDP 可达性和 NAT/防火墙', '增大 MSE SourceBuffer 到 30 秒'], answer: 'b' },
+  { question: 'WebRTC 低延迟的核心原因，哪项表述更准确？', options: ['不等传统切片、使用小缓冲，并根据反馈及时调码率或放弃过期包', 'UDP 在物理线路中的传播速度比 TCP 快很多', '使用 WebRTC 后编码和网络延迟会全部消失'], answer: 'a' },
+  { question: '连续丢包时，WebRTC 画面短暂变糊但很快追上现场，这体现了什么取舍？', options: ['优先保证每个旧包完整，允许延迟无限增长', '关闭 RTCP 后由浏览器猜测所有丢包', '通过重传、纠错、关键帧请求或放弃过期包来保实时'], answer: 'c' },
+  { question: '严格 NAT 下 ICE 选择 TURN relay candidate 后，链路发生了什么变化？', options: ['媒体改走 HLS 文件缓存', '媒体经 TURN 中继，增加带宽成本和额外跳数', 'DTLS 与 SRTP 都不再需要'], answer: 'b' },
+  { question: '4 Mbps 直播有 10,000 名 WebRTC 观众，边缘总下行约 40 Gbps。它比 HLS CDN 更贵的关键是什么？', options: ['还要维护约 10,000 条实时会话、加密状态和各自网络反馈', 'WebRTC 会把每个像素强制扩大十倍', 'SFU 必须逐路解码再编码所有视频'], answer: 'a' },
+  { question: 'HLS CDN 与 WebRTC CDN 的工作模型主要差在哪里？', options: ['前者只能用于局域网，后者只能用于公网', '前者缓存可复用切片，后者通过 SFU/实时边缘立即转发有时效的数据包', '两者都只依赖浏览器本地缓存，不需要边缘节点'], answer: 'b' },
+  { question: 'CDN 边缘命中率从 99% 降到 80%，最直接应该关注什么？', options: ['观众摄像头采样率', 'WebRTC Offer 中的视频方向', '回源带宽、源站连接与区域播放错误是否上升'], answer: 'c' },
+  { question: '直播 P2P 已分担 60% 下行，但某运营商用户互助成功率骤降。合理处理是什么？', options: ['让 CDN 兜底并降低该群体的 P2P 调度比例', '关闭源站，让失败用户互相等待', '把所有视频统一改为未压缩格式'], answer: 'a' },
+  { question: '用户报告“低延迟但频繁卡顿”，最合理的解释与动作是什么？', options: ['低延迟协议一定不会卡，应忽略报告', '小缓冲抵抗抖动的余量不足，应结合丢包、抖动和码率反馈调整', '只要把播放器缓冲设为零就能同时解决两者'], answer: 'b' }
 ];

@@ -152,19 +152,19 @@ export const DIAGNOSTIC_CASES = [
 ];
 
 export const STAGE2_QUIZ = [
-  { question: 'FFmpeg 在典型推流链路中最常承担什么工作？', options: ['采集、编码、封装并发送', '只负责观众评论', '只负责服务器扩容'], answer: 'a' },
-  { question: 'RTMP 地址里的 live 通常代表什么？', options: ['视频编码器型号', '应用名 app', '固定的播放器缓冲'], answer: 'b' },
-  { question: 'rtmp://live.example.com:1935/live/room-7 中 room-7 是什么？', options: ['流名 stream', '协议版本', '视频帧率'], answer: 'a' },
-  { question: 'RTMP 默认常用端口是哪个？', options: ['80', '443', '1935'], answer: 'c' },
-  { question: 'FFmpeg 的 -re 在读取文件推实时流时有什么作用？', options: ['按媒体原始节奏读取', '自动提高分辨率', '生成鉴权 token'], answer: 'a' },
-  { question: '命令中的 -c:v libx264 表示什么？', options: ['视频使用 H.264 编码器', '音频使用 AAC', '输出封装为 MP4'], answer: 'a' },
-  { question: '-b:v 2500k 主要控制什么？', options: ['视频码率目标', '音频采样率', 'SRS 端口'], answer: 'a' },
-  { question: 'RTMP 推流常用哪种封装输出？', options: ['FLV', 'ZIP', 'PNG'], answer: 'a' },
-  { question: 'RTMP 建连时，哪一步最先发生？', options: ['publish', 'TCP 连接', 'createStream'], answer: 'b' },
-  { question: 'createStream 的作用更接近哪项？', options: ['申请逻辑媒体流并取得 streamId', '开始视频采集', '让观众下载 HLS 切片'], answer: 'a' },
-  { question: 'publish 阶段被拒绝，最应先检查什么？', options: ['流名与鉴权 token', '观众屏幕亮度', '麦克风音量'], answer: 'a' },
-  { question: 'SRS 在链路中的核心角色是什么？', options: ['媒体接入与一对多分发服务器', '摄像头驱动', '浏览器视频标签'], answer: 'a' },
-  { question: '为什么一路主播流能服务许多观众？', options: ['每个观众都直接连主播电脑', 'SRS/CDN 接入后复制和分发', 'H.264 会自动生成服务器'], answer: 'b' },
-  { question: '日志显示 Connection refused，优先排查哪一层？', options: ['主机、端口、监听和网络', 'GOP 画质', '播放器字幕'], answer: 'a' },
-  { question: '发送队列持续增长并丢帧，最可能的根因是什么？', options: ['输出码率超过稳定上行能力', 'streamKey 太短', '观众没有刷新页面'], answer: 'a' }
+  { question: '用本地 MP4 模拟实时主播并推到 RTMP，哪组 FFmpeg 参数职责最完整？', options: ['-i 负责限速，-re 负责选择编码器，-f 负责鉴权', '-c:v 负责输入地址，-b:v 负责 RTMP 握手，-re 负责封装', '-re 按节奏读取，编码参数压缩媒体，-f flv 后发送到 RTMP 地址'], answer: 'c' },
+  { question: '地址 rtmp://live.example.com:1935/live/room-7 中，live 与 room-7 分别是什么？', options: ['协议版本与端口', '应用名 app 与流名 stream', '编码器名称与封装格式'], answer: 'b' },
+  { question: 'TCP 已连接且 RTMP 握手成功，但 publish 返回鉴权失败。下一步最应该查什么？', options: ['streamKey、token、应用名与服务端鉴权日志', '降低视频分辨率并增大 GOP', '检查观众播放器的 MSE 缓冲'], answer: 'a' },
+  { question: '日志直接出现 connect to live.example.com:1935: Connection refused，证据首先指向哪一层？', options: ['编码 preset 太慢', '主机、端口、服务监听或网络可达性', 'AAC 音频时间戳偏移'], answer: 'b' },
+  { question: '文件只有 60 秒，去掉 -re 后 FFmpeg 很快把内容推完，最合理的解释是什么？', options: ['没有按媒体时间节奏限速读取文件', 'RTMP 自动把帧率改成了 600 FPS', 'SRS 关闭了所有鉴权'], answer: 'a' },
+  { question: '输入稳定 30 FPS，但编码速度长期只有 0.7×。继续推流最可能发生什么？', options: ['服务端会自动补出缺失帧且没有延迟', '编码队列和延迟增长，最终可能丢帧', '流名会自动变成另一个房间号'], answer: 'b' },
+  { question: '主播稳定上行约 5 Mbps，FFmpeg 输出视频 6 Mbps 加音频 192 kbps。哪个调整更合理？', options: ['继续提高码率，用更大队列隐藏问题', '只修改 RTMP 端口，不动媒体参数', '把总输出码率降到上行能力以内并保留波动余量'], answer: 'c' },
+  { question: 'RTMP 建连流程中，哪条顺序更接近真实过程？', options: ['TCP → RTMP handshake → connect → createStream → publish', 'publish → createStream → TCP → handshake', 'createStream → HLS 清单 → DTLS → publish'], answer: 'a' },
+  { question: 'createStream 成功返回 streamId，但随后 publish 被拒绝，说明什么？', options: ['摄像头一定没有采集到画面', '连接和逻辑流已建立到一定阶段，失败点更靠近发布许可', '观众端一定缺少 H.264 解码器'], answer: 'b' },
+  { question: 'FFmpeg 命令里视频使用 copy、音频重新编码 AAC，这表示什么？', options: ['视频不重新压缩，音频经过转码后再封装', '视频与音频都必须解码成原始数据再输出', '只复制文件名，不传媒体内容'], answer: 'a' },
+  { question: 'RTMP 通常基于 TCP。上行发生丢包时，哪个现象更符合它的传输特性？', options: ['旧包可以永远丢弃且后续字节立即越过', '完全不会发生重传', '丢失字节需要重传，后续有序数据可能一起等待'], answer: 'c' },
+  { question: 'SRS 收到主播一路流后，可以同时输出 HTTP-FLV 与 HLS。这里 SRS 的角色是什么？', options: ['只负责驱动主播摄像头', '接入、复制并按不同播放方式分发媒体', '只负责浏览器页面排版'], answer: 'b' },
+  { question: '服务器显示流已发布，但观众首屏长期等不到画面，推流端 GOP 为 10 秒。最值得验证什么？', options: ['首个关键帧是否过晚，缩短 GOP 后首开是否改善', '把 streamKey 改成更短的字符串', '关闭服务端所有日志以减少 I/O'], answer: 'a' },
+  { question: 'RTMP 推流画面正常但完全无声，优先从哪组证据排查？', options: ['CDN 缓存命中率和观众地理位置', '音频输入、map 选择、AAC 编码与服务端音轨信息', '视频 GOP 与显示器刷新率'], answer: 'b' },
+  { question: '发送队列持续上涨，同时编码速度为 1.1×、服务器无错误。哪条判断更有依据？', options: ['采集设备没有输出像素', 'publish 鉴权还没有开始', '产生媒体的平均速率超过当前网络实际发送能力'], answer: 'c' }
 ];
