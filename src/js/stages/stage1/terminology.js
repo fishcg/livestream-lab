@@ -45,8 +45,9 @@ function detailMarkup(term) {
       </figure>`
     : '';
   const motionPreview = term.visual
-    ? `<div class="motion-preview" aria-label="${term.term}动态图解">
+    ? `<div class="motion-preview" tabindex="0" title="悬停放大动态图解" aria-label="${term.term}动态图解，鼠标悬停或键盘聚焦可放大">
         <span class="motion-preview-label">动态图解</span>
+        <span class="motion-preview-hint" aria-hidden="true">悬停放大</span>
         <div class="motion-preview-canvas"><div class="motion-preview-stage">${visualMarkup(term.visual)}</div></div>
       </div>`
     : '';
