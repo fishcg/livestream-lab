@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;600;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="src/css/app.css?v=20260730-31">
+  <link rel="stylesheet" href="src/css/app.css?v=20260730-32">
 </head>
 <body>
   <div class="noise" aria-hidden="true"></div>
@@ -665,8 +665,45 @@
           <div class="stage3-webrtc-reader"><div><span id="stage3WebrtcCounter"></span><h4 id="stage3WebrtcName"></h4><code id="stage3WebrtcCode"></code><p id="stage3WebrtcDetail"></p></div><aside><b>别把信令当媒体</b><p>信令服务帮助双方交换 SDP 和候选信息；真正的音视频走 ICE 最终选中的媒体路径。</p></aside></div>
           <div class="guided-controls"><button class="secondary-button" id="stage3WebrtcPrev" type="button">上一步</button><button class="primary-button small" id="stage3WebrtcNext" type="button">下一步</button></div>
         </section>
+        <section class="stage3-latency-teacher" aria-labelledby="stage3LatencyTitle">
+          <header><div><span>WHY SO FAST?</span><h4 id="stage3LatencyTitle">WebRTC 为什么延迟低？</h4></div><p>不是它的包在网线里跑得更快，而是从采集到播放，<b>少等了几次“凑齐再出发”</b>。</p></header>
+          <div class="stage3-latency-causes">
+            <article><small>01 · 不等切片</small><b>一小批媒体包准备好就发</b><p>传统 HLS 往往要先生成数秒切片；WebRTC 不需要等一整片内容封装完成。</p></article>
+            <article><small>02 · 不让旧包堵住整队</small><b>过期的数据可以放弃</b><p>媒体通常走 SRTP/UDP。丢包时可按需重传或纠错，不必像 TCP 字节流那样让后续数据全部等在队尾。</p></article>
+            <article><small>03 · 缓冲水库更浅</small><b>只存抵抗当前抖动所需的量</b><p>自适应抖动缓冲会随路况变化，不预先囤积数秒内容，因此画面更贴近现场。</p></article>
+            <article><small>04 · 路况随时回报</small><b>RTCP 让发送端边跑边调</b><p>接收端持续反馈丢包、抖动和带宽，发送端可降码率、降分辨率或请求关键帧。</p></article>
+          </div>
+          <aside><b>先记住代价：</b>低延迟不等于永不卡顿。网络变差时，WebRTC 常用暂时降画质、马赛克或丢帧来换取“继续跟着现场走”。</aside>
+        </section>
+        <div class="lab-card inverted stage3-latency-lab">
+          <div class="lab-header"><div><span class="lab-tag">动手实验 3 · 延迟赛道</span><h4>切换路况，看三条路线在哪里等待</h4></div><span class="lab-score">传统 HLS / HTTP-FLV / WebRTC</span></div>
+          <div class="stage3-latency-modes" id="stage3LatencyModes" aria-label="选择网络状态"><button type="button" class="active" data-condition="stable">网络稳定</button><button type="button" data-condition="jitter">到达忽快忽慢</button><button type="button" data-condition="loss">发生连续丢包</button></div>
+          <p class="stage3-latency-scenario" id="stage3LatencyScenario"></p>
+          <div class="stage3-latency-race condition-stable" id="stage3LatencyRace">
+            <article class="stage3-latency-lane hls">
+              <header><div><small>TRADITIONAL HLS</small><b>切片货运车</b></div><strong id="stage3Latency-hls-value"></strong></header>
+              <div class="stage3-latency-visual"><span class="source">现场</span><div class="stage3-hls-cargo"><i>1s</i><i>2s</i><i>3s</i><i>4s</i></div><span class="gate">切片完成<br>才发车</span><span class="screen">播放</span></div>
+              <div class="stage3-latency-meter"><i id="stage3Latency-hls-bar"></i></div>
+              <p><span>等待点</span><b id="stage3Latency-hls-wait"></b></p><p><span>观众感受</span><b id="stage3Latency-hls-outcome"></b></p>
+            </article>
+            <article class="stage3-latency-lane flv">
+              <header><div><small>HTTP-FLV</small><b>连续水管</b></div><strong id="stage3Latency-flv-value"></strong></header>
+              <div class="stage3-latency-visual"><span class="source">现场</span><div class="stage3-flv-train"><i></i><i></i><i></i><i class="lost"></i><i></i><i></i></div><span class="gate">TCP<br>按序交付</span><span class="screen">播放</span></div>
+              <div class="stage3-latency-meter"><i id="stage3Latency-flv-bar"></i></div>
+              <p><span>等待点</span><b id="stage3Latency-flv-wait"></b></p><p><span>观众感受</span><b id="stage3Latency-flv-outcome"></b></p>
+            </article>
+            <article class="stage3-latency-lane webrtc">
+              <header><div><small>WEBRTC</small><b>实时快递员</b></div><strong id="stage3Latency-webrtc-value"></strong></header>
+              <div class="stage3-latency-visual"><span class="source">现场</span><div class="stage3-webrtc-packets"><i></i><i></i><i></i><i class="lost"></i><i></i><i></i><em>RTCP 反馈 ←</em></div><span class="gate">小缓冲<br>按时效取舍</span><span class="screen">播放</span></div>
+              <div class="stage3-latency-meter"><i id="stage3Latency-webrtc-bar"></i></div>
+              <p><span>等待点</span><b id="stage3Latency-webrtc-wait"></b></p><p><span>观众感受</span><b id="stage3Latency-webrtc-outcome"></b></p>
+            </article>
+          </div>
+          <div class="stage3-latency-answer"><span>这次路况告诉你</span><p id="stage3LatencyTakeaway"></p></div>
+          <small class="stage3-latency-note">延迟范围是帮助建立量级直觉的常见工程值，不是协议保证；服务架构、编码、网络和播放器策略都会改变结果。这里的 HLS 指传统分片方案，低延迟 HLS 会进一步缩短切片与缓冲。</small>
+        </div>
         <div class="lab-card inverted stage3-route-lab">
-          <div class="lab-header"><div><span class="lab-tag">动手实验 3</span><h4>直连失败时，媒体去哪儿？</h4></div><span class="lab-score">ICE PATH</span></div>
+          <div class="lab-header"><div><span class="lab-tag">动手实验 4</span><h4>直连失败时，媒体去哪儿？</h4></div><span class="lab-score">ICE PATH</span></div>
           <div class="stage3-route-modes" id="stage3RouteModes"><button type="button" class="active" data-route="direct">普通家庭网络</button><button type="button" data-route="relay">严格 NAT / 防火墙</button></div>
           <div class="stage3-webrtc-route" id="stage3WebrtcRoute"><div class="endpoint server">媒体服务</div><div class="direct-line"><i></i></div><div class="turn-node">TURN</div><div class="relay-line"><i></i></div><div class="endpoint viewer">观众</div></div>
           <div class="stage3-route-stats"><div><span>当前路径</span><b id="stage3WebrtcPath"></b></div><div><span>延迟直觉</span><b id="stage3WebrtcLatency"></b></div><div><span>带宽代价</span><b id="stage3WebrtcCost"></b></div></div>
@@ -687,7 +724,7 @@
           <section><small>PEER ASSIST</small><b>P2P 协同</b><p>调度器让观众之间交换已获得的数据。它通常补充 CDN，不是完全替代 CDN。</p></section>
         </div>
         <div class="lab-card stage3-distribution-lab">
-          <div class="lab-header"><div><span class="lab-tag">动手实验 4 · 分发调度台</span><h4>同样的观众规模，流量由谁承担？</h4></div><span class="lab-score">以 4 Mbps HLS、98% CDN 命中率估算</span></div>
+          <div class="lab-header"><div><span class="lab-tag">动手实验 5 · 分发调度台</span><h4>同样的观众规模，流量由谁承担？</h4></div><span class="lab-score">以 4 Mbps HLS、98% CDN 命中率估算</span></div>
           <div class="stage3-distribution-modes" id="stage3DistributionModes">
             <button type="button" data-mode="direct">源站直发</button>
             <button type="button" class="active" data-mode="cdn">CDN 分发</button>
@@ -725,7 +762,7 @@
         <div class="lesson-heading two-column-heading"><div><span class="lesson-no">06 — PROTOCOL CHOICE</span><h3>没有最强协议，只有最硬约束</h3></div><p>先问是否双向互动，再看目标延迟、终端兼容、观看规模、CDN 和回看需求。不要因为“延迟低”就让所有场景都上 WebRTC。</p></div>
         <div class="stage3-choice-rule"><div><small>第一问</small><b>需要双向实时互动吗？</b><p>需要：优先评估 WebRTC。</p></div><i>→</i><div><small>第二问</small><b>需要大规模与广兼容吗？</b><p>需要：优先评估 HLS。</p></div><i>→</i><div><small>第三问</small><b>固定桌面且希望较低延迟？</b><p>可以评估 HTTP-FLV。</p></div></div>
         <div class="lab-card stage3-selector-lab">
-          <div class="lab-header"><div><span class="lab-tag">动手实验 5</span><h4>六个场景，替它们选播放协议</h4></div><span class="lab-score" id="stage3ScenarioScore">0 / 6</span></div>
+          <div class="lab-header"><div><span class="lab-tag">动手实验 6</span><h4>六个场景，替它们选播放协议</h4></div><span class="lab-score" id="stage3ScenarioScore">0 / 6</span></div>
           <div class="stage3-scenario-grid" id="stage3ScenarioGrid"></div><div class="feedback" id="stage3SelectorFeedback" role="status"></div>
         </div>
       </article>
@@ -734,7 +771,7 @@
         <div class="lesson-heading two-column-heading"><div><span class="lesson-no">07 — PLAYBACK INCIDENTS</span><h3>黑屏、卡顿、高延迟，先看第一条证据</h3></div><p>把浏览器网络请求、控制台、缓冲长度和 WebRTC 状态放在一起，先判断“数据有没有到”，再追封装、解码和渲染。</p></div>
         <section class="term-explainer" data-term-set="stage3-playback"></section>
         <div class="diagnostic-chain stage3-diagnostic-chain"><span>地址/信令</span><i>→</i><span>网络请求</span><i>→</i><span>缓冲</span><i>→</i><span>解封装/解码</span><i>→</i><span>渲染</span></div>
-        <div class="lab-card"><div class="lab-header"><div><span class="lab-tag">动手实验 6</span><h4>四起播放事故，选择第一检查动作</h4></div><span class="lab-score" id="stage3DiagnosticScore">0 / 4</span></div>
+        <div class="lab-card"><div class="lab-header"><div><span class="lab-tag">动手实验 7</span><h4>四起播放事故，选择第一检查动作</h4></div><span class="lab-score" id="stage3DiagnosticScore">0 / 4</span></div>
           <div class="incident-lab stage3-incident-lab"><div class="incident-list" id="stage3IncidentList"></div><section class="evidence-panel stage3-evidence-panel"><span>PLAYBACK EVIDENCE</span><h4 id="stage3EvidenceTitle"></h4><p id="stage3EvidenceSymptom"></p><pre id="stage3EvidenceLog"></pre><small id="stage3EvidenceClue"></small><div class="evidence-options" id="stage3EvidenceOptions"></div><div class="feedback" id="stage3DiagnosticFeedback" role="status"></div></section></div>
         </div>
       </article>
@@ -1102,6 +1139,6 @@
 
   <div class="toast" id="toast" role="status"></div>
   <div id="certificateRoot"></div>
-  <script type="module" src="src/js/app.js?v=20260730-25"></script>
+  <script type="module" src="src/js/app.js?v=20260730-26"></script>
 </body>
 </html>

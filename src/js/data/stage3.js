@@ -110,6 +110,33 @@ export const WEBRTC_STEPS = [
   { name: '实时媒体', code: 'SRTP / RTCP', detail: '加密媒体通过 SRTP 传输，RTCP 反馈丢包、抖动和带宽，发送端可及时调整。' }
 ];
 
+export const WEBRTC_LATENCY_SCENARIOS = {
+  stable: {
+    name: '网络稳定',
+    summary: '路况正常时，三条路线都能播放；差别主要来自“发车前要攒多少”和“播放器要存多少”。',
+    hls: { latency: '约 8～16 秒', wait: '先攒完整切片，再按清单下载', outcome: '稳定，但离现场更远', level: 88 },
+    flv: { latency: '约 1～3 秒', wait: '持续传输，仍保留一段播放缓冲', outcome: '较实时，桌面网页常用', level: 38 },
+    webrtc: { latency: '约 0.2～0.8 秒', wait: '媒体包就绪即发，只留小型抖动缓冲', outcome: '互动几乎能立即得到回应', level: 12 },
+    takeaway: '此时 WebRTC 领先的关键是：不等切片、缓冲更小、媒体包就绪即发。'
+  },
+  jitter: {
+    name: '到达忽快忽慢',
+    summary: '路况开始抖动。缓冲大的路线更稳，WebRTC 则通过 RTCP 反馈和自适应抖动缓冲快速跟随变化。',
+    hls: { latency: '约 10～18 秒', wait: '多片缓冲吸收波动，代价是继续落后', outcome: '通常仍平稳播放', level: 94 },
+    flv: { latency: '约 2～5 秒', wait: 'TCP 到达节奏波动，播放器增加缓冲', outcome: '延迟可能逐渐累积', level: 54 },
+    webrtc: { latency: '约 0.4～1.2 秒', wait: 'RTCP 报告抖动，调整码率和缓冲深度', outcome: '可能先降清晰度来保实时', level: 22 },
+    takeaway: 'WebRTC 不靠大水库硬扛，而是边跑边汇报路况，让发送端及时减小码率。'
+  },
+  loss: {
+    name: '发生连续丢包',
+    summary: '一批包丢了。HTTP 路线倾向等重传补齐；WebRTC 会按时效决定重传、纠错、请求关键帧，或放弃已经过期的包。',
+    hls: { latency: '约 12～20 秒', wait: '当前切片下载受阻，补齐后才能继续', outcome: '等待更久，画面通常较完整', level: 100 },
+    flv: { latency: '约 3～6 秒', wait: 'TCP 丢包重传，后续字节也排队等待', outcome: '可能出现停顿和缓冲增长', level: 68 },
+    webrtc: { latency: '约 0.5～1.5 秒', wait: '按需 NACK / FEC / PLI，过期包可以放弃', outcome: '更快追上现场，但可能糊或掉帧', level: 30 },
+    takeaway: '低延迟的代价在这里最明显：WebRTC 宁可暂时降画质、马赛克或丢帧，也不让所有后续画面一直等旧包。'
+  }
+};
+
 export const PROTOCOL_SCENARIOS = [
   { id: 'event', title: '万人演唱会', detail: '观众以观看为主，覆盖手机、电视和浏览器，允许十秒左右延迟。', answer: 'hls', why: 'HLS 对 CDN 和终端兼容最友好，适合大规模单向观看。' },
   { id: 'auction', title: '实时拍卖', detail: '出价结果必须尽快反馈，延迟过高会直接影响公平性。', answer: 'webrtc', why: '强互动需要亚秒级反馈，WebRTC 更符合实时目标。' },

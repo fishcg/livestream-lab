@@ -1,8 +1,9 @@
 import { $, $$ } from '../../core/dom.js';
-import { WEBRTC_STEPS } from '../../data/stage3.js?v=20260729-3';
+import { WEBRTC_LATENCY_SCENARIOS, WEBRTC_STEPS } from '../../data/stage3.js?v=20260730-4';
 
 let stepIndex = 0;
 let routeMode = 'direct';
+let networkCondition = 'stable';
 
 function renderConnectionStep() {
   $$('.stage3-webrtc-step').forEach((button, index) => {
@@ -35,6 +36,28 @@ function renderRoute() {
   });
 }
 
+function renderLatencyRace() {
+  const scenario = WEBRTC_LATENCY_SCENARIOS[networkCondition];
+  const race = $('#stage3LatencyRace');
+  race.className = `stage3-latency-race condition-${networkCondition}`;
+  $('#stage3LatencyScenario').textContent = scenario.summary;
+  $('#stage3LatencyTakeaway').textContent = scenario.takeaway;
+
+  ['hls', 'flv', 'webrtc'].forEach((protocol) => {
+    const result = scenario[protocol];
+    $(`#stage3Latency-${protocol}-value`).textContent = result.latency;
+    $(`#stage3Latency-${protocol}-wait`).textContent = result.wait;
+    $(`#stage3Latency-${protocol}-outcome`).textContent = result.outcome;
+    $(`#stage3Latency-${protocol}-bar`).style.setProperty('--latency-level', `${result.level}%`);
+  });
+
+  $$('#stage3LatencyModes button').forEach((button) => {
+    const active = button.dataset.condition === networkCondition;
+    button.classList.toggle('active', active);
+    button.setAttribute('aria-pressed', String(active));
+  });
+}
+
 export function initWebrtcLab() {
   $$('.stage3-webrtc-step').forEach((button, index) => button.addEventListener('click', () => {
     stepIndex = index;
@@ -52,6 +75,11 @@ export function initWebrtcLab() {
     routeMode = button.dataset.route;
     renderRoute();
   }));
+  $$('#stage3LatencyModes button').forEach((button) => button.addEventListener('click', () => {
+    networkCondition = button.dataset.condition;
+    renderLatencyRace();
+  }));
   renderConnectionStep();
+  renderLatencyRace();
   renderRoute();
 }
