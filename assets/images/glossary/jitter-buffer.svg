@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-labelledby="title desc">
+  <title id="title">不均匀出菜与传菜台缓冲</title><desc id="desc">厨房以不均匀节奏送出盘子，传菜台先存放几盘，再按稳定间隔送给客人。</desc>
+  <defs><linearGradient id="bg"><stop stop-color="#19232a"/><stop offset="1" stop-color="#0b1014"/></linearGradient><filter id="s"><feDropShadow dx="0" dy="10" stdDeviation="8" flood-opacity=".4"/></filter></defs>
+  <rect width="640" height="360" fill="url(#bg)"/>
+  <g transform="translate(40 62)">
+    <path d="M0 176h560" stroke="#5d6871" stroke-width="8"/><path d="M18 184v70M542 184v70" stroke="#414b53" stroke-width="12"/>
+    <g transform="translate(10 20)" filter="url(#s)"><ellipse cx="55" cy="106" rx="52" ry="13" fill="#d6d0c5"/><path d="M18 98c6-32 68-32 75 0" fill="#ff6a2a"/><circle cx="56" cy="72" r="10" fill="#f2c760"/></g>
+    <g transform="translate(123 64)" filter="url(#s)"><ellipse cx="55" cy="106" rx="52" ry="13" fill="#d6d0c5"/><path d="M18 98c6-32 68-32 75 0" fill="#45d5e8"/><circle cx="56" cy="72" r="10" fill="#f2c760"/></g>
+    <g transform="translate(250 8)" filter="url(#s)"><ellipse cx="55" cy="106" rx="52" ry="13" fill="#d6d0c5"/><path d="M18 98c6-32 68-32 75 0" fill="#a6ef67"/><circle cx="56" cy="72" r="10" fill="#f2c760"/></g>
+    <g transform="translate(396 44)" filter="url(#s)"><ellipse cx="55" cy="106" rx="52" ry="13" fill="#d6d0c5"/><path d="M18 98c6-32 68-32 75 0" fill="#ffb077"/><circle cx="56" cy="72" r="10" fill="#f2c760"/></g>
+    <g fill="#ff6a2a"><circle cx="35" cy="0" r="5"/><circle cx="160" cy="0" r="5"/><circle cx="194" cy="0" r="5"/><circle cx="322" cy="0" r="5"/><circle cx="470" cy="0" r="5"/></g>
+    <g stroke="#77828b" stroke-width="2"><path d="M35 0v20M160 0v62M194 0v40M322 0v8M470 0v42"/></g>
+  </g>
+  <g transform="translate(508 286)" fill="#a6ef67"><circle r="6"/><circle cx="26" r="6"/><circle cx="52" r="6"/><circle cx="78" r="6"/></g>
+</svg>

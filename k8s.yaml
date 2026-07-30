@@ -1,0 +1,73 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: livestream-lab-service
+  labels:
+    app: livestream-lab
+spec:
+  type: NodePort
+  ports:
+    - name: web
+      port: 4173
+      targetPort: 4173
+      nodePort: 30173
+  selector:
+    app: livestream-lab
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: livestream-lab
+  labels:
+    app: livestream-lab
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: livestream-lab
+  template:
+    metadata:
+      labels:
+        app: livestream-lab
+    spec:
+      containers:
+        - name: livestream-lab
+          image: 172.24.173.77:30500/livestream-lab:d57b5d84b012
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: web
+              containerPort: 4173
+          env:
+            - name: TZ
+              value: 'Asia/Shanghai'
+          readinessProbe:
+            httpGet:
+              path: /
+              port: web
+            initialDelaySeconds: 2
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /
+              port: web
+            initialDelaySeconds: 10
+            periodSeconds: 20
+            timeoutSeconds: 3
+            failureThreshold: 3
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            runAsUser: 1000
+            runAsGroup: 1000
+            capabilities:
+              drop:
+                - ALL

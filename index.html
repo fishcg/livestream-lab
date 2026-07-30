@@ -1,0 +1,1105 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b0d10">
+  <meta name="description" content="五阶段直播推拉流互动速通课程">
+  <title>LiveLab · 直播技术速通实验室</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="src/css/app.css?v=20260730-23">
+</head>
+<body>
+  <div class="noise" aria-hidden="true"></div>
+  <header class="topbar">
+    <a class="brand" href="#stage-1" aria-label="LiveLab 首页">
+      <span class="brand-mark"><i></i><i></i><i></i></span>
+      <span>LIVE<span>LAB</span></span>
+    </a>
+    <div class="signal-status"><span></span> LOCAL SIGNAL / ONLINE</div>
+    <div class="top-progress">
+      <span>总进度</span>
+      <strong id="topProgressText">0 / 5</strong>
+      <div class="progress-track"><i id="topProgressBar"></i></div>
+    </div>
+    <button class="menu-toggle" id="menuToggle" aria-label="打开课程目录" aria-expanded="false">目录</button>
+  </header>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="course-meta">
+      <p>CRASH COURSE · 约 3.5H</p>
+      <h1>直播推拉流<br>速通实验室</h1>
+      <span>理解链路，更要会定位问题。</span>
+    </div>
+    <nav class="stage-nav" aria-label="课程阶段">
+      <button class="nav-item active" data-stage="1">
+        <span class="nav-index">01</span>
+        <span><b>信号是怎么跑的</b><small>编码 · 封装 · 时间戳</small></span>
+        <i class="nav-state"></i>
+      </button>
+      <button class="nav-item" data-stage="2">
+        <span class="nav-index">02</span>
+        <span><b>把画面推上去</b><small>FFmpeg · RTMP · SRS</small></span>
+        <i class="nav-state"></i>
+      </button>
+      <button class="nav-item" data-stage="3">
+        <span class="nav-index">03</span>
+        <span><b>让观众看得到</b><small>HLS · FLV · WebRTC</small></span>
+        <i class="nav-state"></i>
+      </button>
+      <button class="nav-item" data-stage="4">
+        <span class="nav-index">04</span>
+        <span><b>卡了，从哪儿查</b><small>延迟 · 卡顿 · 音画同步</small></span>
+        <i class="nav-state"></i>
+      </button>
+      <button class="nav-item" data-stage="5">
+        <span class="nav-index">05</span>
+        <span><b>搭一条真实链路</b><small>转码 · CDN · 可观测</small></span>
+        <i class="nav-state"></i>
+      </button>
+    </nav>
+    <div class="sidebar-tip">
+      <span>LAB</span>
+      <p><b>实验原则</b>先动手猜，再看答案。犯错是这里最快的快捷键。</p>
+    </div>
+    <button class="reset-button" id="resetProgress">重置学习进度</button>
+  </aside>
+
+  <main>
+    <section class="stage active" id="stage-1" data-stage="1">
+      <div class="hero stage-hero">
+        <div>
+          <div class="eyebrow"><span>STAGE 01</span><i></i>先懂术语，再看信号怎么跑</div>
+          <h2>一帧画面，<br><em>究竟经历了什么？</em></h2>
+          <p>这一阶段只解决四件事：直播术语怎么分、直播链路怎么走、码率为什么影响清晰度，以及 GOP 为什么决定卡顿恢复速度。</p>
+          <div class="hero-actions">
+            <button class="primary-button" data-scroll="lesson-glossary">开始第一课 <span>↓</span></button>
+            <span class="time-chip">TIME / 建议 35 分钟</span>
+          </div>
+        </div>
+        <div class="hero-visual" aria-label="实时音视频信号动画">
+          <div class="live-card">
+            <div class="live-card-top"><span><i></i> LIVE</span><b>00:01:28</b></div>
+            <div class="live-scene">
+              <div class="camera-lens"><i></i></div>
+              <div class="scan-line"></div>
+              <div class="waveform" id="waveform"></div>
+            </div>
+            <div class="telemetry"><span>1080P</span><span>30 FPS</span><span>4.2 Mbps</span><span>H.264</span></div>
+          </div>
+          <div class="packet packet-a">NALU <b>7F A2</b></div>
+          <div class="packet packet-b">PTS <b>90090</b></div>
+        </div>
+      </div>
+
+      <article class="lesson terminology-section" id="lesson-glossary">
+        <div class="lesson-heading two-column-heading">
+          <div><span class="lesson-no">01 — LIVE GLOSSARY</span><h3>直播术语说明</h3></div>
+          <p>不要背定义。点开一个名词，看它在画面里“动起来”，再用生活中的东西把它记住。</p>
+        </div>
+        <div class="glossary-lab lab-card">
+          <div class="glossary-toolbar">
+            <div class="glossary-filters" id="glossaryFilters" aria-label="术语分类">
+              <button class="active" data-category="all">全部</button>
+              <button data-category="media">画面与声音</button>
+              <button data-category="structure">压缩与组织</button>
+              <button data-category="network">传输与体验</button>
+            </div>
+            <span class="lab-score" id="glossaryProgress">已读 0 / 12</span>
+          </div>
+          <div class="glossary-shell">
+            <div class="glossary-grid" id="glossaryGrid" aria-label="直播术语列表"></div>
+            <section class="glossary-detail" id="glossaryDetail" aria-live="polite"></section>
+          </div>
+        </div>
+        <div class="knowledge-callout"><span class="callout-icon" data-icon="tip"></span><p><b>遇到陌生格式，先问三句话：</b>它是在压缩数据、组织数据，还是传输数据？这能解决大多数“它们有什么区别”的困惑。</p></div>
+      </article>
+
+      <article class="lesson" id="lesson-pipeline">
+        <div class="lesson-heading">
+          <span class="lesson-no">02 — SIGNAL CHAIN</span>
+          <h3>直播链路的建立</h3>
+          <p>主播的声音和画面不会“直接传给观众”。它们要先变成可传输的数据，再由服务器分发。</p>
+        </div>
+        <div class="concept-strip">
+          <div><span class="concept-icon" data-icon="reality"></span><span>现实信号</span><b>光线 + 声波</b></div><i>→</i>
+          <div><span class="concept-icon" data-icon="media"></span><span>数字媒体</span><b>视频帧 + 音频采样</b></div><i>→</i>
+          <div><span class="concept-icon" data-icon="network"></span><span>网络数据</span><b>压缩包 + 时间戳</b></div>
+        </div>
+        <section class="guided-lesson" id="journeyTutor" aria-label="一帧数据的七站旅程">
+          <div class="guided-topline"><span>知识讲解 · 跟我走一遍</span><b id="journeyCounter">01 / 07</b></div>
+          <div class="journey-map" id="journeyMap"></div>
+          <div class="journey-content">
+            <div class="journey-copy" id="journeyCopy"></div>
+            <aside class="teacher-note" id="journeyNote"></aside>
+          </div>
+          <div class="guided-controls">
+            <button class="secondary-button" id="journeyPrev">上一站</button>
+            <div class="journey-dots" id="journeyDots"></div>
+            <button class="primary-button small" id="journeyNext">下一站</button>
+          </div>
+        </section>
+        <div class="lab-card">
+          <div class="lab-header">
+            <div><span class="lab-tag">动手实验 1</span><h4>重建一条直播链路</h4></div>
+            <span class="lab-score" id="pipelineScore">0 / 7</span>
+          </div>
+          <p class="lab-intro">依次点击下方模块，把它们放进正确的信号链。想一想：是先编码，还是先推流？</p>
+          <div class="pipeline-slots" id="pipelineSlots" aria-label="直播链路答案区"></div>
+          <div class="pipeline-pool" id="pipelinePool"></div>
+          <div class="lab-actions">
+            <button class="secondary-button" id="pipelineReset">打乱重来</button>
+            <button class="primary-button small" id="pipelineCheck">检查链路</button>
+          </div>
+          <div class="feedback" id="pipelineFeedback" role="status"></div>
+        </div>
+        <div class="insight-grid">
+          <div class="insight"><span class="insight-icon" data-icon="capture"></span><span>主播端</span><b>采集 → 编码 → 封装</b><p>把原始画面变小，并装进便于连续传输的数据结构。</p></div>
+          <div class="insight"><span class="insight-icon" data-icon="server"></span><span>服务端</span><b>接入 → 处理 → 分发</b><p>接住流，按需转码、录制，再送往离观众更近的节点。</p></div>
+          <div class="insight"><span class="insight-icon" data-icon="playback"></span><span>观众端</span><b>拉流 → 解封装 → 解码</b><p>把网络数据还原成屏幕上的像素和扬声器里的声音。</p></div>
+        </div>
+      </article>
+
+      <article class="lesson dark-lesson">
+        <div class="lesson-heading">
+          <span class="lesson-no">03 — THREE LAYERS</span>
+          <h3>编码、封装、协议，别再混了</h3>
+          <p>记住一句话：<b>编码负责压小，封装负责装好，协议负责送到。</b></p>
+        </div>
+        <div class="analogy-row">
+          <div class="analogy-card"><figure><img src="https://acgay.oss-cn-hangzhou.aliyuncs.com/livestream-lab/releases/08437ecd3ab8/assets/images/glossary/codec-vacuum-generated.webp" alt="羽绒被在真空袋中被压缩" loading="lazy"><span class="analogy-icon" data-icon="encode"></span></figure><small>CODEC · 编码</small><h4>把羽绒被压缩</h4><p>H.264 / H.265 / AAC / Opus</p></div>
+          <div class="analogy-card"><figure><img src="https://acgay.oss-cn-hangzhou.aliyuncs.com/livestream-lab/releases/08437ecd3ab8/assets/images/glossary/container-box-generated.webp" alt="视频、音频和时间轴被装入同一个箱子" loading="lazy"><span class="analogy-icon" data-icon="container"></span></figure><small>CONTAINER · 封装</small><h4>把物品装进箱子</h4><p>FLV / MPEG-TS / MP4</p></div>
+          <div class="analogy-card"><figure><img src="https://acgay.oss-cn-hangzhou.aliyuncs.com/livestream-lab/releases/08437ecd3ab8/assets/images/glossary/protocol-generated.webp" alt="主播、服务器和观众通过共同规则运输数据" loading="lazy"><span class="analogy-icon" data-icon="protocol"></span></figure><small>PROTOCOL · 协议</small><h4>选择运输路线</h4><p>RTMP / HLS / WebRTC / SRT</p></div>
+        </div>
+        <div class="lab-card inverted">
+          <div class="lab-header">
+            <div><span class="lab-tag">动手实验 3</span><h4>把技术名词送回它的家</h4></div>
+            <span class="lab-score" id="sortScore">0 / 9</span>
+          </div>
+          <p class="lab-intro">先点一个名词，再点它所属的分类。</p>
+          <div class="term-pool" id="termPool"></div>
+          <div class="bucket-grid">
+            <button class="bucket" data-bucket="codec"><span class="bucket-index">01</span><span class="bucket-icon" data-icon="encode"></span><b>编码 CODEC</b><small>压缩媒体数据</small></button>
+            <button class="bucket" data-bucket="container"><span class="bucket-index">02</span><span class="bucket-icon" data-icon="container"></span><b>封装 CONTAINER</b><small>组织音视频流</small></button>
+            <button class="bucket" data-bucket="protocol"><span class="bucket-index">03</span><span class="bucket-icon" data-icon="protocol"></span><b>协议 PROTOCOL</b><small>规定如何传输</small></button>
+          </div>
+          <div class="feedback" id="sortFeedback" role="status"></div>
+        </div>
+      </article>
+
+      <article class="lesson">
+        <div class="lesson-heading two-column-heading">
+          <div><span class="lesson-no">04 — BITRATE LAB</span><h3>清晰度，不只看分辨率</h3></div>
+          <p>码率是“每秒能用多少数据描述画面”。同样 1080P，演唱会比静态访谈需要更高码率，因为每一帧变化更多。</p>
+        </div>
+        <div class="teaching-block">
+          <div class="teaching-block-head"><span>知识讲解</span><h4>三个旋钮，分别控制什么？</h4></div>
+          <div class="teach-grid">
+            <div class="teach-card"><figure><img src="https://acgay.oss-cn-hangzhou.aliyuncs.com/livestream-lab/releases/08437ecd3ab8/assets/images/glossary/resolution-generated.webp" alt="同一帆船的低分辨率与高分辨率瓷砖对比" loading="lazy"><span data-icon="resolution"></span></figure><span>01</span><h5>分辨率：一张图有多少格</h5><p>1080P 是 1920×1080 个像素。格子越多，能表现的细节上限越高，每帧要处理的数据也越多。</p></div>
+            <div class="teach-card"><figure><img src="https://acgay.oss-cn-hangzhou.aliyuncs.com/livestream-lab/releases/08437ecd3ab8/assets/images/glossary/fps-flipbook-generated.webp" alt="翻页动画形成连续运动" loading="lazy"><span data-icon="fps"></span></figure><span>02</span><h5>帧率：每秒翻多少张图</h5><p>30 FPS 就是每秒 30 帧。帧率主要影响运动流畅度，不会直接让一张静止画面变得更精细。</p></div>
+            <div class="teach-card"><figure><img src="https://acgay.oss-cn-hangzhou.aliyuncs.com/livestream-lab/releases/08437ecd3ab8/assets/images/glossary/bitrate-pipe-generated.webp" alt="数据颗粒通过带宽管道" loading="lazy"><span data-icon="bitrate"></span></figure><span>03</span><h5>码率：每秒给多少信息预算</h5><p>码率是编码后的数据预算。画面越复杂、分辨率和帧率越高，通常越需要更大的预算。</p></div>
+          </div>
+          <div class="derivation-card"><span>为什么必须编码？</span><p>一秒未压缩的 1080P、30 FPS、RGB 视频大约是：</p><code>1920 × 1080 × 24 bit × 30 ≈ 1.49 Gbps</code><p>普通网络几乎扛不住。H.264 会利用“画面内部相似”和“相邻帧相似”把它压到几 Mbps。</p></div>
+        </div>
+        <div class="bitrate-lab lab-card">
+          <div class="control-panel">
+            <label>分辨率 <output id="resolutionOut">1080P</output><input id="resolution" type="range" min="0" max="3" value="2" step="1"></label>
+            <label>帧率 <output id="fpsOut">30 FPS</output><input id="fps" type="range" min="0" max="2" value="1" step="1"></label>
+            <label>画面运动量 <output id="motionOut">中等</output><input id="motion" type="range" min="0" max="2" value="1" step="1"></label>
+            <div class="scene-options" id="sceneOptions">
+              <button data-scene="talk" class="active">访谈</button>
+              <button data-scene="game">游戏</button>
+              <button data-scene="concert">演唱会</button>
+            </div>
+          </div>
+          <div class="bitrate-result">
+            <span>建议起始码率</span>
+            <strong><b id="bitrateValue">4.2</b> Mbps</strong>
+            <div class="quality-meter"><i id="qualityMeter"></i><span></span></div>
+            <div class="uplink"><span>建议主播上行至少</span><b id="uplinkValue">6.3 Mbps</b><small>按码率 × 1.5 留出抖动余量</small></div>
+            <p id="bitrateHint">1080P 访谈画面变化不大，4 Mbps 左右通常是合理起点。</p>
+          </div>
+        </div>
+        <div class="knowledge-callout"><span class="callout-icon" data-icon="warning"></span><p><b>高分辨率 + 低码率 ≠ 高清。</b>像素格子更多，但每个格子分到的信息更少，运动时反而更容易出现马赛克。</p></div>
+      </article>
+
+      <article class="lesson gop-section">
+        <div class="lesson-heading">
+          <span class="lesson-no">05 — GOP VISUALIZER</span>
+          <h3>为什么丢一个包，会糊半天？</h3>
+          <p>I 帧是一张完整图片；P/B 帧只记录“和前后帧的差异”。播放器丢失关键参考后，往往要等下一个 I 帧才能完全恢复。</p>
+        </div>
+        <figure class="lesson-figure">
+          <img src="https://acgay.oss-cn-hangzhou.aliyuncs.com/livestream-lab/releases/08437ecd3ab8/assets/images/glossary/gop-generated.webp" alt="一张完整城市底图后跟着只记录变化区域的透明画框" loading="lazy">
+          <figcaption><span data-icon="gop"></span><div><b>先记住这张图</b><p>I 帧像完整底图，P/B 帧像一叠“修改说明”；下面的动画继续演示丢失参考帧后会发生什么。</p></div></figcaption>
+        </figure>
+        <div class="frame-teacher">
+          <div class="frame-teach-card key"><b>I</b><div><span>关键帧 · 完整底图</span><p>自己就能解码，不依赖前面的画面。播放器通常从它开始起播和恢复。</p></div></div>
+          <div class="frame-teach-card"><b>P</b><div><span>预测帧 · 修改说明</span><p>参考之前的 I/P 帧，只保存“哪里变了”，体积明显更小。</p></div></div>
+          <div class="frame-teach-card"><b>B</b><div><span>双向预测帧 · 更省空间</span><p>可同时参考前后画面，压缩效率高，但会让解码顺序与展示顺序不同。</p></div></div>
+        </div>
+        <div class="teacher-summary"><span>老师小结</span><p>如果 30 FPS 下每 60 帧放一个 I 帧，关键帧间隔就是 <b>60 ÷ 30 = 2 秒</b>。丢失重要参考后，最坏可能要接近 2 秒才遇到下一张完整底图。</p></div>
+        <div class="gop-lab lab-card">
+          <div class="gop-controls">
+            <label>GOP 长度 <input id="gopLength" type="range" min="30" max="150" value="60" step="30"><output id="gopOut">60 帧</output></label>
+            <button class="danger-button" id="dropPacket">模拟丢包</button>
+          </div>
+          <div class="frame-track" id="frameTrack"></div>
+          <div class="playhead"><i id="playhead"></i></div>
+          <div class="gop-stats">
+            <div><span>关键帧间隔</span><b id="gopSeconds">约 2 秒</b></div>
+            <div><span>随机丢包后的最坏恢复</span><b id="recoverSeconds">≤ 2 秒</b></div>
+            <p id="gopHint">GOP 越短，恢复越快、起播更容易，但 I 帧多会增加码率。</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="lesson checkpoint">
+        <div class="checkpoint-head"><span>STAGE 01 · CHECKPOINT</span><h3>第一阶段，验收信号</h3><p>15 题全对即可点亮阶段徽章。</p></div>
+        <form class="quiz" id="stage1Quiz">
+          <div class="quiz-questions" id="stage1QuizQuestions"></div>
+          <button class="primary-button" type="submit">提交答案，完成阶段 01</button>
+          <div class="feedback" id="quizFeedback" role="status"></div>
+        </form>
+      </article>
+    </section>
+
+    <section class="stage" id="stage-2" data-stage="2">
+      <div class="stage2-hero">
+        <div class="stage2-hero-copy">
+          <div class="eyebrow"><span>STAGE 02</span><i></i>主播视角 · 一场媒体旅行</div>
+          <h2>跟着一帧画面，<br><em>去服务器旅行。</em></h2>
+          <p>你是主播。按下开播后，一个由画面和声音组成的“小流”从桌前出发：领路线票、进 FFmpeg 工厂、装进 FLV 货柜、穿过 RTMP 隧道，最后抵达 SRS 中央站。</p>
+          <div class="hero-actions">
+            <button class="primary-button" data-scroll="stage2-overview">开始第二阶段 <span>↓</span></button>
+            <span class="time-chip">TIME / 建议 45 分钟</span>
+          </div>
+        </div>
+        <figure class="stage2-hero-figure">
+          <picture><source srcset="https://acgay.oss-cn-hangzhou.aliyuncs.com/livestream-lab/releases/08437ecd3ab8/assets/images/stage2/journey/studio-departure.webp" type="image/webp"><img src="https://acgay.oss-cn-hangzhou.aliyuncs.com/livestream-lab/releases/08437ecd3ab8/assets/images/stage2/journey/studio-departure-fallback.jpg" alt="媒体旅行者从主播的摄像机和麦克风旁出发"></picture>
+          <figcaption><span data-icon="publish"></span><b>欢迎登上小流的上行旅程</b><small>主播桌前 → 加工厂 → 运输隧道 → 中央站</small></figcaption>
+        </figure>
+      </div>
+      <nav class="stage2-lesson-nav" aria-label="第二阶段课内导航">
+        <button type="button" data-scroll="stage2-overview"><small>01</small>旅行出发</button>
+        <button type="button" data-scroll="stage2-url"><small>02</small>领取路线票</button>
+        <button type="button" data-scroll="stage2-ffmpeg"><small>03</small>参观加工厂</button>
+        <button type="button" data-scroll="stage2-publish"><small>04</small>穿过 RTMP</button>
+        <button type="button" data-scroll="stage2-srs"><small>05</small>抵达 SRS</button>
+        <button type="button" data-scroll="stage2-diagnostics"><small>06</small>进入维修间</button>
+      </nav>
+
+      <article class="lesson stage2-overview" id="stage2-overview">
+        <div class="lesson-heading two-column-heading">
+          <div><span class="lesson-no">01 — DEPARTURE</span><h3>先站到主播桌前，再按下开播</h3></div>
+          <p>上传文件是“货物准备完再发车”；直播则是镜头还在拍，前面的画面已经离开桌面。我们不从协议定义开始，而是跟着这一帧画面一路往下走。</p>
+        </div>
+        <div class="stage2-teacher-note"><span data-icon="tip"></span><div><b>今天的三位向导</b><p>FFmpeg 是加工厂，RTMP 是连续运输规则，SRS 是中央车站。记住角色关系，后面的命令和术语自然会找到位置。</p></div></div>
+        <section class="stage2-trailer" aria-label="第二阶段旅行预告">
+          <div><span>8 秒旅行预告</span><h4>先看小流会经过哪里</h4><p>这段短片只负责建立整条链路的空间感。看完后，再逐站进入真实参数、协议步骤和故障证据。</p></div>
+          <video controls muted loop playsinline preload="metadata" poster="https://acgay.oss-cn-hangzhou.aliyuncs.com/livestream-lab/releases/08437ecd3ab8/assets/images/stage2/journey/studio-departure-fallback.jpg" aria-label="媒体旅行者从主播桌前经过 FFmpeg、RTMP 到达 SRS 的八秒预告"><source src="https://acgay.oss-cn-hangzhou.aliyuncs.com/livestream-lab/releases/08437ecd3ab8/assets/media/stage2/travel-teaser.mp4?v=20260729-2" type="video/mp4"></video>
+        </section>
+        <section class="stage2-journey lab-card" aria-label="推流七站旅行互动讲解">
+          <div class="lab-header"><div><span class="lab-tag">知识讲解 · 一站一站旅行</span><h4>跟着媒体旅行者，把术语放回真实链路</h4></div><span class="lab-score" id="stage2JourneyCounter">01 / 07</span></div>
+          <div class="stage2-journey-steps" id="stage2JourneySteps"></div>
+          <div class="stage2-journey-detail" id="stage2JourneyDetail" aria-live="polite"></div>
+          <div class="guided-controls stage2-tour-controls">
+            <button class="secondary-button" id="stage2JourneyPrev" type="button">上一站</button>
+            <button class="secondary-button" id="stage2JourneyAuto" type="button">自动导览</button>
+            <button class="secondary-button" id="stage2JourneyPractice" type="button">看当前讲解</button>
+            <button class="primary-button small" id="stage2JourneyNext" type="button">继续旅行</button>
+          </div>
+        </section>
+        <div class="stage2-role-heading"><span>沿途会反复遇见的三个角色</span><p>工具、协议和服务器各司其职，别把它们混成一个“推流软件”。</p></div>
+        <div class="stage2-role-grid">
+          <div><span class="stage2-role-icon" data-icon="encode"></span><small>FFMPEG</small><b>媒体加工工具</b><p>读输入、调参数、编码、封装，并把连续数据送往输出地址。</p></div>
+          <div><span class="stage2-role-icon" data-icon="protocol"></span><small>RTMP</small><b>实时传输协议</b><p>规定客户端如何连接、发布，以及音视频消息如何在长连接里传输。</p></div>
+          <div><span class="stage2-role-icon" data-icon="server"></span><small>SRS</small><b>流媒体服务器</b><p>监听端口、接入直播流、鉴权、录制，并向下游做一对多分发。</p></div>
+        </div>
+      </article>
+
+      <article class="lesson dark-lesson stage2-url-lesson" id="stage2-url">
+        <div class="lesson-heading two-column-heading">
+          <div><span class="lesson-no">02 — ROUTE PASS</span><h3>第二站：给小流领取一张路线票</h3></div>
+          <p>主播通常先从直播后台拿到推流地址和密钥，再填进工具。它同时回答五个问题：走什么规则、去哪里、进哪个应用、发布哪一路、带什么通行证。</p>
+        </div>
+        <figure class="stage2-wide-figure">
+          <picture><source srcset="https://acgay.oss-cn-hangzhou.aliyuncs.com/livestream-lab/releases/08437ecd3ab8/assets/images/stage2/journey/rtmp-ticket-gate.webp" type="image/webp"><img src="https://acgay.oss-cn-hangzhou.aliyuncs.com/livestream-lab/releases/08437ecd3ab8/assets/images/stage2/journey/rtmp-ticket-gate-fallback.jpg" alt="媒体旅行者拿着五段式路线票穿过多层地址闸机"></picture>
+          <figcaption><span data-icon="protocol"></span><div><b>地址闸机一层层缩小目的地</b><p>先确认交通规则和服务器入口，再进入业务楼层，最后凭流名与 token 到达具体房间。</p></div></figcaption>
+        </figure>
+        <div class="stage2-address-demo" aria-label="RTMP 地址分段解释">
+          <code><span data-part="scheme">rtmp://</span><span data-part="host">live.example.com:1935</span><span data-part="app">/live</span><span data-part="stream">/room-001</span><span data-part="query">?token=••••</span></code>
+          <div class="stage2-address-parts" id="stage2AddressParts"></div>
+        </div>
+        <div class="stage2-url-lab lab-card inverted">
+          <div class="lab-header"><div><span class="lab-tag">过站任务 1</span><h4>亲手填好小流的 RTMP 路线票</h4></div><span class="lab-score">不会发起真实请求</span></div>
+          <div class="builder-options">
+            <label>主机与端口<input id="stage2RtmpHost" value="localhost:1935" autocomplete="off"></label>
+            <label>应用名 APP<input id="stage2RtmpApp" value="live" autocomplete="off"></label>
+            <label>流名 STREAM<input id="stage2RtmpStream" value="demo" autocomplete="off"></label>
+            <label>鉴权 TOKEN（可留空）<input id="stage2RtmpToken" value="training-pass" autocomplete="off"></label>
+          </div>
+          <div class="stage2-address-ticket"><span>服务器最终收到的地址</span><code id="stage2RtmpOutput"></code><small id="stage2RtmpPreview"></small></div>
+          <div class="stage2-playback-map">
+            <div><span>同一个 APP / STREAM，可映射为播放地址</span><p>推流和播放协议可以不同，但 <b>live / demo</b> 这对业务坐标保持一致。</p></div>
+            <code><small>HTTP-FLV 示例</small><b id="stage2FlvExample"></b></code>
+            <code><small>HLS 示例</small><b id="stage2HlsExample"></b></code>
+          </div>
+          <p class="stage2-example-warning">这里只演示地址映射；相应播放地址是否可用，取决于 SRS 是否启用了对应输出能力。</p>
+          <div class="lab-actions"><button class="primary-button small" id="stage2RtmpCheck" type="button">检查地址结构</button></div>
+          <div class="feedback" id="stage2RtmpFeedback" role="status"></div>
+        </div>
+      </article>
+
+      <article class="lesson stage2-ffmpeg-lesson" id="stage2-ffmpeg">
+        <div class="lesson-heading two-column-heading">
+          <div><span class="lesson-no">03 — MEDIA FACTORY</span><h3>第三站：走进 FFmpeg 媒体工厂</h3></div>
+          <p>站在主播侧看，FFmpeg 就是接受摄像头、麦克风、屏幕或文件的加工厂。命令是工厂订单：从左向右规定原料、加工规格、装箱方式和出口。</p>
+        </div>
+        <figure class="stage2-wide-figure light">
+          <picture><source srcset="https://acgay.oss-cn-hangzhou.aliyuncs.com/livestream-lab/releases/08437ecd3ab8/assets/images/stage2/journey/ffmpeg-factory-tour.webp" type="image/webp"><img src="https://acgay.oss-cn-hangzhou.aliyuncs.com/livestream-lab/releases/08437ecd3ab8/assets/images/stage2/journey/ffmpeg-factory-tour-fallback.jpg" alt="媒体旅行者参观 FFmpeg 工厂中的视频和音频加工流水线"></picture>
+          <figcaption><span data-icon="encode"></span><div><b>视频与音频走不同工位，再在出口会合</b><p>视频被调整尺寸、帧率和码率，音频被采样与压缩；工厂必须始终跟上直播的实时节奏。</p></div></figcaption>
+        </figure>
+        <div class="stage2-command-anatomy">
+          <div><span>01 · 输入节奏</span><code>-re -i demo.mp4</code><p><b>-re</b> 让文件按原始速度读取；没有它，文件可能被尽快推完，不再像直播。</p></div>
+          <div><span>02 · 视频加工</span><code>-c:v libx264 -b:v 2500k</code><p>选择 H.264 编码器并设置视频码率目标。画质和上行压力都从这里开始变化。</p></div>
+          <div><span>03 · 音频加工</span><code>-c:a aac -b:a 128k</code><p>把音频编码成兼容性较好的 AAC，并给它每秒 128 kb 的信息预算。</p></div>
+          <div><span>04 · 封装与出口</span><code>-f flv rtmp://…</code><p>将音视频组织成 FLV，再通过 RTMP 地址持续送往服务器。</p></div>
+        </div>
+        <section class="term-explainer" data-term-set="stage2-ffmpeg"></section>
+        <figure class="stage2-story-figure">
+          <picture><source srcset="https://acgay.oss-cn-hangzhou.aliyuncs.com/livestream-lab/releases/08437ecd3ab8/assets/images/stage2/journey/flv-packing-dock.webp" type="image/webp"><img src="https://acgay.oss-cn-hangzhou.aliyuncs.com/livestream-lab/releases/08437ecd3ab8/assets/images/stage2/journey/flv-packing-dock-fallback.jpg" alt="视频块和音频块按时间交错装入透明连续货柜"></picture>
+          <figcaption><span>厂内最后一道工位 · MUX</span><h4>编码是把货物压小，封装是把货物按时间装好</h4><p>橙色视频块和蓝色音频块不会随便混在一起。封装器依据 PTS/DTS 把它们交错放进 FLV Tag；它不再次提高画质，也不负责网络运输。</p></figcaption>
+        </figure>
+        <div class="lab-card stage2-command-lab">
+          <div class="lab-header"><div><span class="lab-tag">过站任务 2</span><h4>给 FFmpeg 工厂填写一张加工单</h4></div><span class="lab-score">命令模拟器</span></div>
+          <div class="builder-options stage2-command-options">
+            <label>输入来源<select id="stage2CmdSource"><option value="file">本地视频文件</option><option value="camera">摄像头 + 麦克风</option><option value="screen">屏幕 + 麦克风</option></select></label>
+            <label>输出尺寸<select id="stage2CmdSize"><option value="1280:720">720P</option><option value="1920:1080" selected>1080P</option><option value="854:480">480P</option></select></label>
+            <label>帧率<select id="stage2CmdFps"><option value="25">25 FPS</option><option value="30" selected>30 FPS</option><option value="60">60 FPS</option></select></label>
+            <label>视频码率<select id="stage2CmdBitrate"><option value="1500">1500 kbps</option><option value="2500">2500 kbps</option><option value="4000" selected>4000 kbps</option><option value="6000">6000 kbps</option></select></label>
+            <label>编码预设<select id="stage2CmdPreset"><option value="veryfast">veryfast · 省算力</option><option value="faster">faster · 较均衡</option><option value="fast">fast · 更省码率</option></select></label>
+          </div>
+          <div class="terminal stage2-terminal">
+            <div class="terminal-bar"><i></i><i></i><i></i><span>FFMPEG COMMAND LAB</span></div>
+            <pre id="stage2CommandOutput"></pre>
+            <div class="terminal-log" id="stage2CommandLog">等待启动模拟推流…</div>
+          </div>
+          <p class="stage2-command-hint" id="stage2CommandHint"></p>
+          <div class="stage2-command-health">
+            <div><span>编码压力估算 <b id="stage2EncoderLoadText">45%</b></span><div role="meter" aria-label="编码压力估算" aria-valuemin="0" aria-valuemax="100"><i id="stage2EncoderLoad"></i></div><small>受分辨率、帧率和 preset 影响</small></div>
+            <div><span>上行预算占用 <b id="stage2UplinkLoadText">60%</b></span><div role="meter" aria-label="上行预算占用" aria-valuemin="0" aria-valuemax="100"><i id="stage2UplinkLoad"></i></div><small>按 10 Mbps 稳定上行预算估算</small></div>
+            <p id="stage2TradeoffHint"></p>
+          </div>
+          <div class="lab-actions"><button class="primary-button small" id="stage2CommandRun" type="button">模拟启动推流</button></div>
+          <div class="feedback" id="stage2CommandFeedback" role="status"></div>
+        </div>
+        <div class="knowledge-callout"><span class="callout-icon" data-icon="warning"></span><p><b>命令能运行，不代表参数合理。</b>稳定推流要同时满足：编码速度 ≥ 实时速度、输出码率低于稳定上行、服务器接受地址与鉴权。</p></div>
+      </article>
+
+      <article class="lesson dark-lesson stage2-publish-lesson" id="stage2-publish">
+        <div class="lesson-heading two-column-heading">
+          <div><span class="lesson-no">04 — RTMP TUNNEL</span><h3>第四站：穿过五道 RTMP 关卡</h3></div>
+          <p>小流离开工厂后，并不能直接冲进服务器。“连接成功”和“推流成功”不是同一刻：TCP、握手、connect、createStream、publish 必须按顺序放行。</p>
+        </div>
+        <figure class="stage2-wide-figure">
+          <picture><source srcset="https://acgay.oss-cn-hangzhou.aliyuncs.com/livestream-lab/releases/08437ecd3ab8/assets/images/stage2/journey/rtmp-handshake-tunnel.webp" type="image/webp"><img src="https://acgay.oss-cn-hangzhou.aliyuncs.com/livestream-lab/releases/08437ecd3ab8/assets/images/stage2/journey/rtmp-handshake-tunnel-fallback.jpg" alt="媒体旅行者沿数据流依次穿过 RTMP 建连的五道关卡"></picture>
+          <figcaption><span data-icon="publish"></span><div><b>走到哪一关，就是最有用的故障坐标</b><p>第一关都进不去就查网络；最后 publish 才被拦下，则应查流名、鉴权或重复发布。</p></div></figcaption>
+        </figure>
+        <section class="term-explainer" data-term-set="stage2-rtmp"></section>
+        <div class="stage2-publish-map" aria-label="RTMP 推流建立步骤">
+          <div class="stage2-publish-track">
+            <button class="stage2-publish-step" type="button"><i></i><small>01</small><b>TCP</b></button>
+            <button class="stage2-publish-step" type="button"><i></i><small>02</small><b>握手</b></button>
+            <button class="stage2-publish-step" type="button"><i></i><small>03</small><b>connect</b></button>
+            <button class="stage2-publish-step" type="button"><i></i><small>04</small><b>createStream</b></button>
+            <button class="stage2-publish-step" type="button"><i></i><small>05</small><b>publish</b></button>
+            <span class="stage2-packet" aria-hidden="true"></span>
+          </div>
+          <div class="stage2-publish-reader">
+            <div><span id="stage2PublishCounter">01 / 05</span><h4 id="stage2PublishName"></h4><code id="stage2PublishCode"></code><p id="stage2PublishDetail"></p></div>
+            <aside><b>判断故障层的秘诀</b><p>看“走到了哪一步”。TCP 失败查网络；publish 才失败，网络大概率已通，应转向 app、流名、鉴权或重复发布。</p></aside>
+          </div>
+          <div class="guided-controls">
+            <button class="secondary-button" id="stage2PublishPrev" type="button">上一步</button>
+            <button class="secondary-button" id="stage2PublishReplay" type="button">自动重走五关</button>
+            <button class="primary-button small" id="stage2PublishNext" type="button">下一步</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="lesson stage2-srs-lesson" id="stage2-srs">
+        <div class="lesson-heading two-column-heading">
+          <div><span class="lesson-no">05 — CENTRAL STATION</span><h3>第五站：抵达 SRS 中央站</h3></div>
+          <p>小流完成 publish 后，终于成为服务器中的直播源。SRS 校验发布者、维护这一路输入，再按配置送去播放、录制或 CDN；主播不用给每位观众各上传一份。</p>
+        </div>
+        <figure class="stage2-wide-figure light">
+          <picture><source srcset="https://acgay.oss-cn-hangzhou.aliyuncs.com/livestream-lab/releases/08437ecd3ab8/assets/images/stage2/journey/srs-central-station.webp" type="image/webp"><img src="https://acgay.oss-cn-hangzhou.aliyuncs.com/livestream-lab/releases/08437ecd3ab8/assets/images/stage2/journey/srs-central-station-fallback.jpg" alt="一路橙色直播进入 SRS 中央站后分成多条蓝色路线"></picture>
+          <figcaption><span data-icon="server"></span><div><b>一进多出，是中央站最重要的能力</b><p>左边只有主播的一路上行；右边的播放、转协议、录制和分发出口都由服务端承担。</p></div></figcaption>
+        </figure>
+        <section class="term-explainer" data-term-set="stage2-srs"></section>
+        <section class="stage2-config-reader" aria-label="SRS 最小配置解读">
+          <div class="stage2-config-head"><span>知识讲解 · 本地教学配置</span><h4>先读懂五行，再启动服务</h4><p>点击配置行查看作用。这里讲的是配置语义，不会连接或修改任何生产环境。</p></div>
+          <div class="stage2-config-body">
+            <div class="stage2-config-lines" id="stage2SrsConfigLines"></div>
+            <div class="stage2-config-detail" id="stage2SrsConfigDetail" aria-live="polite"></div>
+          </div>
+        </section>
+        <div class="stage2-srs-lab lab-card">
+          <div class="lab-header"><div><span class="lab-tag">过站任务 3</span><h4>替小流打开不同的分发站台</h4></div><span class="lab-score">一对多分发</span></div>
+          <div class="stage2-srs-flow">
+            <div class="stage2-srs-source"><span data-icon="publish"></span><small>主播上行</small><b>RTMP / live / demo</b></div>
+            <div class="stage2-srs-core"><span data-icon="server"></span><small>接入服务器</small><b>SRS</b><i></i></div>
+            <div class="stage2-srs-routes">
+              <div class="stage2-srs-route" data-label="网页播放"><span data-icon="playback"></span><b>网页播放</b><small>交给下游播放协议</small></div>
+              <div class="stage2-srs-route" data-label="录制存档"><span data-icon="container"></span><b>录制存档</b><small>保存为文件或切片</small></div>
+              <div class="stage2-srs-route" data-label="CDN 转发"><span data-icon="network"></span><b>CDN 转发</b><small>扩大观众覆盖</small></div>
+            </div>
+          </div>
+          <div class="stage2-srs-controls">
+            <label><input class="stage2-srs-toggle" type="checkbox" data-label="网页播放" checked>网页播放出口</label>
+            <label><input class="stage2-srs-toggle" type="checkbox" data-label="录制存档" checked>录制存档出口</label>
+            <label><input class="stage2-srs-toggle" type="checkbox" data-label="CDN 转发">CDN 转发出口</label>
+          </div>
+          <p class="stage2-srs-summary" id="stage2SrsSummary"></p>
+        </div>
+        <div class="stage2-srs-checks">
+          <div><span>接入前</span><b>监听与路由</b><p>确认 1935 监听、vhost、app 与 stream 路径匹配。</p></div>
+          <div><span>发布时</span><b>鉴权与占用</b><p>校验 token、过期时间，并阻止同一流名被意外重复发布。</p></div>
+          <div><span>运行中</span><b>带宽与日志</b><p>观察输入帧率、客户端数、队列、带宽和录制错误。</p></div>
+        </div>
+      </article>
+
+      <article class="lesson stage2-diagnostic-lesson" id="stage2-diagnostics">
+        <div class="lesson-heading two-column-heading">
+          <div><span class="lesson-no">06 — REPAIR WORKSHOP</span><h3>终点之后：进入链路维修间</h3></div>
+          <p>旅行途中真的出故障，不要把每个参数都拧一遍。错误日志是小流留下的路标：先判断它停在采集、加工、装箱、运输还是中央站，再做最小范围验证。</p>
+        </div>
+        <figure class="stage2-wide-figure light">
+          <picture><source srcset="https://acgay.oss-cn-hangzhou.aliyuncs.com/livestream-lab/releases/08437ecd3ab8/assets/images/stage2/journey/repair-workshop.webp" type="image/webp"><img src="https://acgay.oss-cn-hangzhou.aliyuncs.com/livestream-lab/releases/08437ecd3ab8/assets/images/stage2/journey/repair-workshop-fallback.jpg" alt="媒体旅行者和维修员检查推流链路中的红色断点"></picture>
+          <figcaption><span data-icon="tip"></span><div><b>先沿旅行地图找到断点，再拿工具</b><p>连接拒绝、publish 被拒、发送队列溢出、时间戳倒退，分别来自不同站点，不能用同一个办法修。</p></div></figcaption>
+        </figure>
+        <div class="diagnostic-chain stage2-diagnostic-chain"><span>采集</span><i>→</i><span>编码</span><i>→</i><span>封装/时间戳</span><i>→</i><span>TCP/RTMP</span><i>→</i><span>SRS</span></div>
+        <div class="lab-card">
+          <div class="lab-header"><div><span class="lab-tag">维修任务 4</span><h4>四起旅行事故，选择第一检查动作</h4></div><span class="lab-score" id="stage2DiagnosticScore">0 / 4</span></div>
+          <div class="incident-lab stage2-incident-lab">
+            <div class="incident-list" id="stage2IncidentList"></div>
+            <section class="evidence-panel stage2-evidence-panel">
+              <span>INCIDENT EVIDENCE</span><h4 id="stage2EvidenceTitle"></h4><p id="stage2EvidenceSymptom"></p>
+              <pre id="stage2EvidenceLog"></pre><small id="stage2EvidenceClue"></small>
+              <div class="evidence-options" id="stage2EvidenceOptions"></div>
+              <div class="feedback" id="stage2DiagnosticFeedback" role="status"></div>
+            </section>
+          </div>
+        </div>
+        <div class="knowledge-callout"><span class="callout-icon" data-icon="tip"></span><p><b>通用排障顺序：</b>先验证“输入有没有”，再看“编码跟不跟得上”，然后检查“地址能不能连、publish 是否通过”，最后观察长时间发送是否稳定。</p></div>
+      </article>
+
+      <article class="lesson checkpoint stage2-checkpoint">
+        <div class="checkpoint-head"><span>STAGE 02 · CHECKPOINT</span><h3>第二阶段，旅行通关验收</h3><p>15 题全对，证明你能从主播桌前一路解释到 SRS 中央站。</p></div>
+        <div class="stage2-readiness">
+          <div><small>地址</small><b>协议 + 主机端口 + APP + STREAM</b><p>能说清每一段，才知道连接和发布分别查哪里。</p></div>
+          <div><small>命令</small><b>输入 → 编码 → 封装 → 输出</b><p>能解释参数作用，比背下一整行命令更重要。</p></div>
+          <div><small>排障</small><b>先定故障层，再改参数</b><p>TCP、publish、发送队列和时间戳对应不同方向。</p></div>
+        </div>
+        <form class="quiz" id="stage2Quiz">
+          <div class="quiz-questions" id="stage2QuizQuestions"></div>
+          <button class="primary-button" type="submit">提交答案，完成阶段 02</button>
+          <div class="feedback" id="stage2QuizFeedback" role="status"></div>
+        </form>
+      </article>
+    </section>
+
+    <section class="stage" id="stage-3" data-stage="3">
+      <div class="stage3-hero">
+        <div class="stage3-hero-copy">
+          <div class="eyebrow"><span>STAGE 03</span><i></i>观众视角 · 一场播放旅行</div>
+          <h2>点下播放，<br><em>去屏幕里旅行。</em></h2>
+          <p>你是观众。按下播放后，小流通常不会从遥远源站直接赶来：它先经过 CDN 边缘节点，也可能由附近观众通过 P2P 协助分发，再进入缓冲、解封装、解码和同步放映厅。</p>
+          <div class="hero-actions"><button class="primary-button" data-scroll="stage3-overview">开始第三阶段 <span>↓</span></button><span class="time-chip">TIME / 建议 65 分钟</span></div>
+        </div>
+        <figure class="stage3-hero-figure">
+          <picture><source srcset="https://acgay.oss-cn-hangzhou.aliyuncs.com/livestream-lab/releases/08437ecd3ab8/assets/images/stage3/journey/viewer-entry-gate.webp" type="image/webp"><img src="https://acgay.oss-cn-hangzhou.aliyuncs.com/livestream-lab/releases/08437ecd3ab8/assets/images/stage3/journey/viewer-entry-gate-fallback.jpg" alt="橙色媒体旅行者拿着播放路线票走向播放器入口闸机"></picture>
+          <figcaption><span data-icon="playback"></span><b>欢迎登上小流的下行旅程</b><small>播放入口 → CDN / P2P 分发 → 缓冲 → 解码 → 屏幕</small></figcaption>
+        </figure>
+      </div>
+      <nav class="stage3-lesson-nav" aria-label="第三阶段课内导航">
+        <button type="button" data-scroll="stage3-overview"><small>01</small>播放全景</button>
+        <button type="button" data-scroll="stage3-hls"><small>02</small>HLS</button>
+        <button type="button" data-scroll="stage3-flv"><small>03</small>HTTP-FLV</button>
+        <button type="button" data-scroll="stage3-webrtc"><small>04</small>WebRTC</button>
+        <button type="button" data-scroll="stage3-distribution"><small>05</small>CDN / P2P</button>
+        <button type="button" data-scroll="stage3-selector"><small>06</small>协议选型</button>
+        <button type="button" data-scroll="stage3-diagnostics"><small>07</small>播放排障</button>
+      </nav>
+
+      <article class="lesson stage3-overview" id="stage3-overview">
+        <div class="lesson-heading two-column-heading">
+          <div><span class="lesson-no">01 — PLAYBACK JOURNEY</span><h3>先坐到观众屏幕前，再按下播放</h3></div>
+          <p>播放器不是一块被动显示器。它同时是路线查找员、网络接收员、缓冲管理员、拆箱师傅、解码机器和音画指挥家。</p>
+        </div>
+        <figure class="stage3-wide-figure">
+          <picture><source srcset="https://acgay.oss-cn-hangzhou.aliyuncs.com/livestream-lab/releases/08437ecd3ab8/assets/images/stage3/playback-protocol-crossroads.webp" type="image/webp"><img src="https://acgay.oss-cn-hangzhou.aliyuncs.com/livestream-lab/releases/08437ecd3ab8/assets/images/stage3/playback-protocol-crossroads-fallback.jpg" alt="服务器向电视电脑和手机分别提供切片流、连续流和实时媒体"></picture>
+          <figcaption><span data-icon="network"></span><div><b>协议决定“怎么送”，播放器负责“怎么吃”</b><p>路线可以不同，但最终都要经过缓冲、拆轨、解码和渲染。</p></div></figcaption>
+        </figure>
+        <div class="stage3-teacher-note"><span data-icon="tip"></span><div><b>先记住低延迟的代价</b><p>离直播边缘越近，可用来抵抗网络抖动的数据越少。真正的低延迟，不是简单把缓冲改成 0。</p></div></div>
+        <section class="stage3-trailer" aria-label="第三阶段播放旅行预告">
+          <div><span>8 秒播放旅行预告</span><h4>先看小流怎样抵达屏幕</h4><p>这段短片先建立空间感：拿到入口、选择路线、穿过缓冲与解码，最后由播放器把音画同步呈现。</p></div>
+          <video controls muted loop playsinline preload="metadata" poster="https://acgay.oss-cn-hangzhou.aliyuncs.com/livestream-lab/releases/08437ecd3ab8/assets/images/stage3/journey/viewer-entry-gate-fallback.jpg" aria-label="媒体旅行者从播放入口经过缓冲和解码抵达观众屏幕的八秒预告"><source src="https://acgay.oss-cn-hangzhou.aliyuncs.com/livestream-lab/releases/08437ecd3ab8/assets/media/stage3/playback-teaser.mp4?v=20260729-1" type="video/mp4"></video>
+        </section>
+        <section class="stage3-playback-lab lab-card" aria-label="播放器六站互动讲解">
+          <div class="lab-header"><div><span class="lab-tag">知识讲解 · 一站一站旅行</span><h4>跟着媒体旅行者，把播放术语放回真实链路</h4></div><span class="lab-score" id="stage3JourneyCounter">01 / 06</span></div>
+          <div class="stage3-playback-steps" id="stage3PlaybackSteps"></div>
+          <div class="stage3-playback-detail" id="stage3PlaybackDetail" aria-live="polite"></div>
+          <div class="guided-controls stage3-tour-controls">
+            <button class="secondary-button" id="stage3JourneyPrev" type="button">上一站</button>
+            <button class="secondary-button" id="stage3JourneyAuto" type="button">自动导览</button>
+            <button class="secondary-button" id="stage3JourneyPractice" type="button">看当前讲解</button>
+            <button class="primary-button small" id="stage3JourneyNext" type="button">继续旅行</button>
+          </div>
+        </section>
+        <div class="stage3-protocol-heading"><span>三种协议，一眼分清</span><p>延迟数字不是固定承诺，会受配置、网络和播放器策略影响；先抓住它们的传输模型。</p></div>
+        <div class="stage3-protocol-cards" id="stage3ProtocolCards"></div>
+      </article>
+
+      <article class="lesson dark-lesson stage3-hls-lesson" id="stage3-hls">
+        <div class="lesson-heading two-column-heading">
+          <div><span class="lesson-no">02 — HLS</span><h3>HLS：清单带你一片片取</h3></div>
+          <p>服务器把连续直播切成短媒体片段，并维护一份滚动清单。播放器反复刷新清单、下载新片、放进缓冲，再按顺序播放。</p>
+        </div>
+        <figure class="stage3-wide-figure dark">
+          <picture><source srcset="https://acgay.oss-cn-hangzhou.aliyuncs.com/livestream-lab/releases/08437ecd3ab8/assets/images/stage3/hls-segment-conveyor.webp" type="image/webp"><img src="https://acgay.oss-cn-hangzhou.aliyuncs.com/livestream-lab/releases/08437ecd3ab8/assets/images/stage3/hls-segment-conveyor-fallback.jpg" alt="连续音视频被机器切成多个媒体包，播放器按清单依次取片并放入缓冲"></picture>
+          <figcaption><span data-icon="container"></span><div><b>清单像取餐表，切片才是真正的媒体</b><p>播放器先拿 m3u8，再按里面的地址请求 TS 或 fMP4 切片。</p></div></figcaption>
+        </figure>
+        <section class="term-explainer" data-term-set="stage3-hls"></section>
+        <section class="stage3-manifest-reader" aria-label="HLS 播放清单逐行解读">
+          <div class="stage3-manifest-head"><span>知识讲解 · 读懂 M3U8</span><h4>这不是视频文件，而是一张不断更新的路线表</h4></div>
+          <div class="stage3-manifest-body"><div class="stage3-manifest-lines" id="stage3ManifestLines"></div><div class="stage3-manifest-detail" id="stage3ManifestDetail" aria-live="polite"></div></div>
+        </section>
+        <div class="lab-card inverted stage3-hls-lab">
+          <div class="lab-header"><div><span class="lab-tag">动手实验 1</span><h4>切片越短，延迟就一定越低吗？</h4></div><span class="lab-score">教学估算器</span></div>
+          <div class="stage3-hls-controls">
+            <label>切片时长 <output id="stage3SegmentDurationOut">4.0 秒</output><input id="stage3SegmentDuration" type="range" min="1" max="6" value="4" step="0.5"></label>
+            <label>起播前等待 <output id="stage3StartupSegmentsOut">3 片</output><input id="stage3StartupSegments" type="range" min="1" max="5" value="3" step="1"></label>
+          </div>
+          <div class="stage3-hls-timeline" id="stage3HlsTimeline"></div>
+          <div class="stage3-hls-stats"><div><span>估算播放延迟</span><b id="stage3HlsDelay"></b></div><div><span>单观众切片请求频率</span><b id="stage3HlsRequests"></b></div><p id="stage3HlsHint"></p></div>
+        </div>
+      </article>
+
+      <article class="lesson stage3-flv-lesson" id="stage3-flv">
+        <div class="lesson-heading two-column-heading">
+          <div><span class="lesson-no">03 — HTTP-FLV</span><h3>HTTP-FLV：打开一根不断流的管道</h3></div>
+          <p>播放器只发起一次 HTTP 请求，服务器保持响应不断开，并持续送来一个个带类型和时间戳的 FLV Tag。网页端通常由 flv.js 拆 Tag、转成 fMP4，再通过 MSE 交给浏览器播放。</p>
+        </div>
+        <figure class="stage3-wide-figure light">
+          <picture><source srcset="https://acgay.oss-cn-hangzhou.aliyuncs.com/livestream-lab/releases/08437ecd3ab8/assets/images/stage3/http-flv-continuous-pipe.webp" type="image/webp"><img src="https://acgay.oss-cn-hangzhou.aliyuncs.com/livestream-lab/releases/08437ecd3ab8/assets/images/stage3/http-flv-continuous-pipe-fallback.jpg" alt="媒体服务器通过一根持续的透明管道把音视频送入网页播放器缓冲区"></picture>
+          <figcaption><span data-icon="subscribe"></span><div><b>不是不断下载新文件，而是一个响应一直有新数据</b><p>HTTP 负责运输，FLV Tag 负责给数据分组贴标签；flv.js 转换包装后，MSE 才把媒体接进浏览器播放管线。</p></div></figcaption>
+        </figure>
+        <section class="stage3-flv-teacher" aria-label="FLV Tag 与 MSE 知识讲解">
+          <header class="stage3-flv-teacher-head">
+            <div><span>知识讲解 · 两个关键名词</span><h4>先看懂包裹，再看懂浏览器的装货口</h4></div>
+            <p>把整个 HTTP 响应想成一条不停前进的货运带：FLV Tag 是带标签的包裹，MSE 是 JavaScript 把媒体持续交给浏览器的标准装货口。</p>
+          </header>
+          <div class="stage3-flv-definitions">
+            <article>
+              <div class="stage3-flv-term-title"><span>01</span><div><small>FLV TAG</small><h5>FLV 数据流里的一个“带标签包裹”</h5></div></div>
+              <p>一个 FLV 流先出现一次 <b>FLV Header</b>，后面紧跟许多个 Tag。每个 Tag 都用头部说明“我是什么、数据有多大、应该在什么时间播放”，再携带真正的数据。</p>
+              <div class="stage3-tag-anatomy" role="img" aria-label="FLV Tag 由 Tag Header 和 Tag Data 组成">
+                <div><small>TAG HEADER · 11 字节</small><b>类型 8/9/18 · 长度 · Timestamp</b><span>8 是音频，9 是视频，18 是脚本元数据</span></div>
+                <i>+</i>
+                <div><small>TAG DATA</small><b>视频 / 音频 / 元数据</b><span>例如 H.264 编码帧或 AAC 音频</span></div>
+              </div>
+              <p class="stage3-flv-boundary"><b>别混淆：</b>Tag 是 FLV 封装里的记录单元，不等于 TCP 数据包，也不一定等于一张完整视频画面。</p>
+            </article>
+            <article>
+              <div class="stage3-flv-term-title"><span>02</span><div><small>MEDIA SOURCE EXTENSIONS</small><h5>MSE 是浏览器提供的“可追加媒体入口”</h5></div></div>
+              <p>MSE 是一组浏览器 API。JavaScript 可以创建 <b>MediaSource</b> 和 <b>SourceBuffer</b>，再用 <code>appendBuffer()</code> 连续追加浏览器能够消费的媒体片段。</p>
+              <div class="stage3-mse-anatomy" role="img" aria-label="JavaScript 将 fMP4 片段追加到 MSE SourceBuffer，再由 video 元素播放">
+                <span><small>FLV.JS</small><b>fMP4 片段</b></span><i>appendBuffer()</i><span><small>MSE</small><b>SourceBuffer</b></span><i>→</i><span><small>HTML</small><b>&lt;video&gt;</b></span>
+              </div>
+              <p class="stage3-flv-boundary"><b>别混淆：</b>MSE 不是解码器，也通常不直接认识 FLV；它管理追加的数据和播放缓冲，后面的浏览器媒体管线才负责解码、同步与渲染。</p>
+            </article>
+          </div>
+          <div class="stage3-flv-real-path">
+            <span>HTTP 长响应</span><i>→</i><span>FLV Header + Tag + Tag…</span><i>→</i><span>flv.js 拆 Tag、按时间戳分出音视频</span><i>→</i><span>重新封装为 fMP4</span><i>→</i><span>MSE SourceBuffer</span><i>→</i><span>video 解码播放</span>
+          </div>
+          <aside><b>纠正一句常见简写：</b>“把 FLV 喂给 MSE”不够准确。更完整的说法是：flv.js 读取 FLV Tag，取出编码音视频并重新封装为浏览器接受的 fMP4 片段，再追加到 MSE。</aside>
+        </section>
+        <div class="stage3-flv-pipeline">
+          <div><span data-icon="server"></span><small>SERVER</small><b>持续写 FLV Tag</b></div><i>→</i>
+          <div><span data-icon="protocol"></span><small>FLV.JS</small><b>拆 Tag + 转 fMP4</b></div><i>→</i>
+          <div><span data-icon="buffer"></span><small>MSE</small><b>appendBuffer()</b></div><i>→</i>
+          <div><span data-icon="playback"></span><small>VIDEO</small><b>解码与渲染</b></div>
+        </div>
+        <div class="lab-card stage3-flv-lab">
+          <div class="lab-header"><div><span class="lab-tag">动手实验 2</span><h4>缓冲到底该留多少？</h4></div><span class="lab-score">稳定与实时的跷跷板</span></div>
+          <div class="stage3-flv-modes" id="stage3FlvModes"><button type="button" class="active" data-mode="stable">网络稳定</button><button type="button" data-mode="jitter">明显抖动</button><button type="button" data-mode="outage">中断 2 秒</button></div>
+          <div class="stage3-flv-stream" id="stage3FlvStream"><div class="stage3-flv-server">SRS</div><div class="stage3-flv-pipe"><span id="stage3FlvPackets"></span></div><div class="stage3-flv-buffer"><span></span><span></span><span></span></div><div class="stage3-flv-player">PLAYER</div></div>
+          <label class="stage3-flv-buffer-control">播放缓冲 <output id="stage3FlvBufferOut">2.0 秒</output><input id="stage3FlvBuffer" type="range" min="0.5" max="5" value="2" step="0.5"></label>
+          <div class="stage3-flv-stats"><div><span>估算播放延迟</span><b id="stage3FlvLatency"></b></div><div><span>卡顿风险</span><b id="stage3FlvRisk"></b></div><p id="stage3FlvHint"></p></div>
+        </div>
+        <div class="knowledge-callout"><span class="callout-icon" data-icon="warning"></span><p><b>HTTP-FLV 不是所有浏览器都原生支持。</b>桌面网页常借助 MSE；Safari/iOS 等环境的支持边界要用真实设备验证。</p></div>
+      </article>
+
+      <article class="lesson dark-lesson stage3-webrtc-lesson" id="stage3-webrtc">
+        <div class="lesson-heading two-column-heading">
+          <div><span class="lesson-no">04 — WEBRTC</span><h3>WebRTC：先找一条能实时说话的路</h3></div>
+          <p>WebRTC 不是拿一个 URL 就开始下载。双方要先交换能力，收集候选地址，进行连通性检查和安全握手，才能传输实时媒体。</p>
+        </div>
+        <figure class="stage3-wide-figure dark">
+          <picture><source srcset="https://acgay.oss-cn-hangzhou.aliyuncs.com/livestream-lab/releases/08437ecd3ab8/assets/images/stage3/webrtc-direct-relay.webp" type="image/webp"><img src="https://acgay.oss-cn-hangzhou.aliyuncs.com/livestream-lab/releases/08437ecd3ab8/assets/images/stage3/webrtc-direct-relay-fallback.jpg" alt="服务端和手机尝试穿过 NAT 直连，受阻时改走加密的 TURN 中继路线"></picture>
+          <figcaption><span data-icon="network"></span><div><b>能直连就走近路，走不通就让 TURN 中继</b><p>ICE 的目标是找到可用路径；TURN 是可靠兜底，也是需要计算带宽成本的中继。</p></div></figcaption>
+        </figure>
+        <section class="term-explainer" data-term-set="stage3-webrtc"></section>
+        <section class="stage3-webrtc-connect" aria-label="WebRTC 建连步骤">
+          <div class="stage3-webrtc-track">
+            <button type="button" class="stage3-webrtc-step"><i></i><small>01</small><b>信令</b></button>
+            <button type="button" class="stage3-webrtc-step"><i></i><small>02</small><b>ICE</b></button>
+            <button type="button" class="stage3-webrtc-step"><i></i><small>03</small><b>DTLS</b></button>
+            <button type="button" class="stage3-webrtc-step"><i></i><small>04</small><b>SRTP</b></button>
+          </div>
+          <div class="stage3-webrtc-reader"><div><span id="stage3WebrtcCounter"></span><h4 id="stage3WebrtcName"></h4><code id="stage3WebrtcCode"></code><p id="stage3WebrtcDetail"></p></div><aside><b>别把信令当媒体</b><p>信令服务帮助双方交换 SDP 和候选信息；真正的音视频走 ICE 最终选中的媒体路径。</p></aside></div>
+          <div class="guided-controls"><button class="secondary-button" id="stage3WebrtcPrev" type="button">上一步</button><button class="primary-button small" id="stage3WebrtcNext" type="button">下一步</button></div>
+        </section>
+        <div class="lab-card inverted stage3-route-lab">
+          <div class="lab-header"><div><span class="lab-tag">动手实验 3</span><h4>直连失败时，媒体去哪儿？</h4></div><span class="lab-score">ICE PATH</span></div>
+          <div class="stage3-route-modes" id="stage3RouteModes"><button type="button" class="active" data-route="direct">普通家庭网络</button><button type="button" data-route="relay">严格 NAT / 防火墙</button></div>
+          <div class="stage3-webrtc-route" id="stage3WebrtcRoute"><div class="endpoint server">媒体服务</div><div class="direct-line"><i></i></div><div class="turn-node">TURN</div><div class="relay-line"><i></i></div><div class="endpoint viewer">观众</div></div>
+          <div class="stage3-route-stats"><div><span>当前路径</span><b id="stage3WebrtcPath"></b></div><div><span>延迟直觉</span><b id="stage3WebrtcLatency"></b></div><div><span>带宽代价</span><b id="stage3WebrtcCost"></b></div></div>
+          <p id="stage3WebrtcRouteHint" class="stage3-route-hint"></p>
+        </div>
+      </article>
+
+      <article class="lesson stage3-distribution-lesson" id="stage3-distribution">
+        <div class="lesson-heading two-column-heading">
+          <div><span class="lesson-no">05 — CDN &amp; P2P DELIVERY</span><h3>十万人看直播，不能让十万人都挤到源站门口</h3></div>
+          <p>CDN 把内容提前送到离观众更近的边缘节点；P2P 再让部分观众贡献上传带宽，互相传递已经拿到的数据。它们解决的是“怎样把同一份直播大规模送出去”。</p>
+        </div>
+        <section class="term-explainer" data-term-set="stage3-delivery"></section>
+        <div class="stage3-delivery-terms">
+          <section><small>ORIGIN</small><b>源站</b><p>直播的原始出口。它负责向分发网络供给内容，不应该直接承受所有观众连接。</p></section>
+          <section><small>CDN EDGE / POP</small><b>边缘节点</b><p>部署在不同地域和运营商附近，接住观众请求，减少跨地域距离并分散源站压力。</p></section>
+          <section><small>CACHE HIT / MISS</small><b>命中与回源</b><p>边缘已有数据叫命中；没有时才向上游取。回源过多会把压力重新推回源站。</p></section>
+          <section><small>PEER ASSIST</small><b>P2P 协同</b><p>调度器让观众之间交换已获得的数据。它通常补充 CDN，不是完全替代 CDN。</p></section>
+        </div>
+        <div class="lab-card stage3-distribution-lab">
+          <div class="lab-header"><div><span class="lab-tag">动手实验 4 · 分发调度台</span><h4>同样的观众规模，流量由谁承担？</h4></div><span class="lab-score">以 4 Mbps HLS、98% CDN 命中率估算</span></div>
+          <div class="stage3-distribution-modes" id="stage3DistributionModes">
+            <button type="button" data-mode="direct">源站直发</button>
+            <button type="button" class="active" data-mode="cdn">CDN 分发</button>
+            <button type="button" data-mode="p2p">CDN + P2P</button>
+          </div>
+          <div class="stage3-distribution-map mode-cdn" id="stage3DistributionMap">
+            <div class="stage3-origin-node"><small>ORIGIN</small><b>源站</b><span id="stage3OriginLoadBadge">低负载</span></div>
+            <div class="stage3-delivery-trunk"><i></i><i></i><i></i></div>
+            <div class="stage3-edge-layer"><div>EDGE A</div><div>EDGE B</div><div>EDGE C</div></div>
+            <div class="stage3-delivery-fan"><i></i><i></i><i></i></div>
+            <div class="stage3-viewer-layer"><span>观众 1</span><span>观众 2</span><span>观众 3</span><span>观众 4</span><span>观众 5</span><span>观众 6</span></div>
+          </div>
+          <div class="stage3-distribution-controls">
+            <label>同时观看人数 <output id="stage3ViewerCountOut">10,000 人</output><input id="stage3ViewerCount" type="range" min="1000" max="100000" value="10000" step="1000"></label>
+            <label id="stage3P2pShareControl">P2P 分担比例 <output id="stage3P2pShareOut">60%</output><input id="stage3P2pShare" type="range" min="10" max="80" value="60" step="5" disabled></label>
+          </div>
+          <div class="stage3-distribution-stats">
+            <div><span>观众总下行</span><b id="stage3TotalTraffic"></b></div>
+            <div><span>源站承担</span><b id="stage3OriginTraffic"></b></div>
+            <div><span>CDN 边缘承担</span><b id="stage3CdnTraffic"></b></div>
+            <div><span>观众互助承担</span><b id="stage3PeerTraffic"></b></div>
+          </div>
+          <p class="stage3-distribution-hint" id="stage3DistributionHint"></p>
+        </div>
+        <section class="stage3-delivery-matrix" aria-label="不同播放协议与分发技术的关系">
+          <header><span>协议与分发的关系</span><p>CDN、P2P 是分发方式；HLS、HTTP-FLV、WebRTC 是播放器取得媒体的方式，两者不是同一层概念。</p></header>
+          <div><b>HLS / LL-HLS</b><span>切片可缓存，最适合传统 CDN；P2P 也常交换这些短切片。</span></div>
+          <div><b>HTTP-FLV</b><span>CDN 可以代理长连接，但不像 HLS 切片那样依靠文件缓存复用。</span></div>
+          <div><b>WebRTC</b><span>大规模观看通常依赖 SFU 或实时边缘网络；多人全互连 P2P 只适合很小规模。</span></div>
+        </section>
+        <div class="knowledge-callout"><span class="callout-icon" data-icon="warning"></span><p><b>P2P 不是免费 CDN。</b>它受 NAT、终端上传能力、运营商网络、隐私与内容保护影响，必须有 CDN 兜底、调度控制和真实播放质量监控。</p></div>
+      </article>
+
+      <article class="lesson stage3-selector-lesson" id="stage3-selector">
+        <div class="lesson-heading two-column-heading"><div><span class="lesson-no">06 — PROTOCOL CHOICE</span><h3>没有最强协议，只有最硬约束</h3></div><p>先问是否双向互动，再看目标延迟、终端兼容、观看规模、CDN 和回看需求。不要因为“延迟低”就让所有场景都上 WebRTC。</p></div>
+        <div class="stage3-choice-rule"><div><small>第一问</small><b>需要双向实时互动吗？</b><p>需要：优先评估 WebRTC。</p></div><i>→</i><div><small>第二问</small><b>需要大规模与广兼容吗？</b><p>需要：优先评估 HLS。</p></div><i>→</i><div><small>第三问</small><b>固定桌面且希望较低延迟？</b><p>可以评估 HTTP-FLV。</p></div></div>
+        <div class="lab-card stage3-selector-lab">
+          <div class="lab-header"><div><span class="lab-tag">动手实验 5</span><h4>六个场景，替它们选播放协议</h4></div><span class="lab-score" id="stage3ScenarioScore">0 / 6</span></div>
+          <div class="stage3-scenario-grid" id="stage3ScenarioGrid"></div><div class="feedback" id="stage3SelectorFeedback" role="status"></div>
+        </div>
+      </article>
+
+      <article class="lesson stage3-diagnostic-lesson" id="stage3-diagnostics">
+        <div class="lesson-heading two-column-heading"><div><span class="lesson-no">07 — PLAYBACK INCIDENTS</span><h3>黑屏、卡顿、高延迟，先看第一条证据</h3></div><p>把浏览器网络请求、控制台、缓冲长度和 WebRTC 状态放在一起，先判断“数据有没有到”，再追封装、解码和渲染。</p></div>
+        <section class="term-explainer" data-term-set="stage3-playback"></section>
+        <div class="diagnostic-chain stage3-diagnostic-chain"><span>地址/信令</span><i>→</i><span>网络请求</span><i>→</i><span>缓冲</span><i>→</i><span>解封装/解码</span><i>→</i><span>渲染</span></div>
+        <div class="lab-card"><div class="lab-header"><div><span class="lab-tag">动手实验 6</span><h4>四起播放事故，选择第一检查动作</h4></div><span class="lab-score" id="stage3DiagnosticScore">0 / 4</span></div>
+          <div class="incident-lab stage3-incident-lab"><div class="incident-list" id="stage3IncidentList"></div><section class="evidence-panel stage3-evidence-panel"><span>PLAYBACK EVIDENCE</span><h4 id="stage3EvidenceTitle"></h4><p id="stage3EvidenceSymptom"></p><pre id="stage3EvidenceLog"></pre><small id="stage3EvidenceClue"></small><div class="evidence-options" id="stage3EvidenceOptions"></div><div class="feedback" id="stage3DiagnosticFeedback" role="status"></div></section></div>
+        </div>
+      </article>
+
+      <article class="lesson checkpoint stage3-checkpoint">
+        <div class="checkpoint-head"><span>STAGE 03 · CHECKPOINT</span><h3>第三阶段，播放验收</h3><p>15 题全对，证明你能把协议、CDN / P2P 分发、缓冲和排障串起来。</p></div>
+        <div class="stage3-readiness"><div><small>HLS</small><b>清单 + 切片</b><p>规模与兼容优先，延迟来自切片和缓冲的累积。</p></div><div><small>HTTP-FLV</small><b>长响应 + MSE</b><p>桌面网页较低延迟，重点管住连续缓冲。</p></div><div><small>WebRTC</small><b>ICE + 加密实时媒体</b><p>互动优先，难点在选路、中继和网络质量。</p></div><div><small>分发</small><b>CDN 边缘 + P2P 协同</b><p>CDN 承担稳定与兜底，P2P 在合适环境中分担部分流量。</p></div></div>
+        <form class="quiz" id="stage3Quiz"><div class="quiz-questions" id="stage3QuizQuestions"></div><button class="primary-button" type="submit">提交答案，完成阶段 03</button><div class="feedback" id="stage3QuizFeedback" role="status"></div></form>
+      </article>
+    </section>
+
+    <section class="stage" id="stage-4" data-stage="4">
+      <div class="stage4-hero">
+        <div class="stage4-hero-copy">
+          <div class="eyebrow"><span>STAGE 04</span><i></i>直播急诊室 · 一场故障会诊</div>
+          <h2>直播卡顿，<br><em>先别乱开药。</em></h2>
+          <p>“卡”不是病名。跟着媒体旅行者进入直播急诊室：先把症状翻译清楚，再确认影响范围、找到第一条异常证据，最后用最小实验完成会诊。</p>
+          <div class="hero-actions"><button class="primary-button" data-scroll="stage4-overview">开始分诊 <span>↓</span></button><span class="time-chip">TIME / 建议 60 分钟</span></div>
+        </div>
+        <figure class="stage4-hero-figure">
+          <picture><source srcset="https://acgay.oss-cn-hangzhou.aliyuncs.com/livestream-lab/releases/08437ecd3ab8/assets/images/stage4/journey/emergency-triage.webp" type="image/webp"><img src="https://acgay.oss-cn-hangzhou.aliyuncs.com/livestream-lab/releases/08437ecd3ab8/assets/images/stage4/journey/emergency-triage-fallback.jpg" alt="橙色媒体旅行者在直播急诊台接受信号扫描"></picture>
+          <figcaption><span data-icon="warning"></span><b>欢迎来到直播急诊室</b><small>症状 → 范围 → 分层 → 证据 → 实验 → 复盘</small></figcaption>
+        </figure>
+      </div>
+      <nav class="stage4-lesson-nav" aria-label="第四阶段课内导航">
+        <button type="button" data-scroll="stage4-overview"><small>01</small>急诊地图</button>
+        <button type="button" data-scroll="stage4-latency"><small>02</small>延迟预算</button>
+        <button type="button" data-scroll="stage4-stutter"><small>03</small>卡顿心电图</button>
+        <button type="button" data-scroll="stage4-metrics"><small>04</small>指标读片</button>
+        <button type="button" data-scroll="stage4-sync"><small>05</small>音画校准</button>
+        <button type="button" data-scroll="stage4-incidents"><small>06</small>会诊沙盘</button>
+      </nav>
+
+      <article class="lesson stage4-overview" id="stage4-overview">
+        <div class="lesson-heading two-column-heading">
+          <div><span class="lesson-no">01 — TRIAGE JOURNEY</span><h3>先分诊，再拿工具</h3></div>
+          <p>优秀的排障不是记住更多命令，而是用最少证据缩小范围。先问“谁、何时、哪种症状”，再决定看哪一层。</p>
+        </div>
+        <figure class="stage4-wide-figure">
+          <picture><source srcset="https://acgay.oss-cn-hangzhou.aliyuncs.com/livestream-lab/releases/08437ecd3ab8/assets/images/stage4/journey/emergency-triage.webp" type="image/webp"><img src="https://acgay.oss-cn-hangzhou.aliyuncs.com/livestream-lab/releases/08437ecd3ab8/assets/images/stage4/journey/emergency-triage-fallback.jpg" alt="媒体旅行者把模糊的直播卡顿送进分诊台"></picture>
+          <figcaption><span data-icon="warning"></span><div><b>一句“卡了”要先拆成可以验证的症状</b><p>黑屏、首开慢、卡顿、高延迟和音画不同步，会走向不同的证据链。</p></div></figcaption>
+        </figure>
+        <div class="stage4-teacher-note"><span data-icon="tip"></span><div><b>急诊室第一条规则</b><p>先确认影响范围，再看第一条异常证据；不要看到 CPU 高就立刻宣布它是根因。</p></div></div>
+        <section class="stage4-trailer" aria-label="第四阶段故障会诊预告">
+          <div><span>8 秒急诊室预告</span><h4>先看一场故障怎样被接诊</h4><p>媒体旅行者会经过症状挂号、延迟检查、缓冲监护、指标读片和音画校准，最后锁定真正的断点。</p></div>
+          <video controls muted loop playsinline preload="metadata" poster="https://acgay.oss-cn-hangzhou.aliyuncs.com/livestream-lab/releases/08437ecd3ab8/assets/images/stage4/journey/emergency-triage-fallback.jpg" aria-label="媒体旅行者在直播急诊室完成故障分诊的八秒预告"><source src="https://acgay.oss-cn-hangzhou.aliyuncs.com/livestream-lab/releases/08437ecd3ab8/assets/media/stage4/diagnostic-teaser.mp4?v=20260729-1" type="video/mp4"></video>
+        </section>
+        <section class="stage4-tour lab-card" aria-label="直播急诊六步互动讲解">
+          <div class="lab-header"><div><span class="lab-tag">知识讲解 · 六步会诊</span><h4>跟着媒体旅行者，把“卡”变成可验证的结论</h4></div><span class="lab-score" id="stage4TourCounter">01 / 06</span></div>
+          <div class="stage4-tour-steps" id="stage4TourSteps"></div>
+          <div class="stage4-tour-detail" id="stage4TourDetail" aria-live="polite"></div>
+          <div class="guided-controls stage4-tour-controls">
+            <button class="secondary-button" id="stage4TourPrev" type="button">上一科</button>
+            <button class="secondary-button" id="stage4TourAuto" type="button">自动分诊</button>
+            <button class="secondary-button" id="stage4TourPractice" type="button">看当前讲解</button>
+            <button class="primary-button small" id="stage4TourNext" type="button">进入下一科</button>
+          </div>
+        </section>
+      </article>
+
+      <article class="lesson dark-lesson stage4-latency-lesson" id="stage4-latency">
+        <div class="lesson-heading two-column-heading">
+          <div><span class="lesson-no">02 — LATENCY BUDGET</span><h3>直播延迟从哪儿来？每个环节都会增加一点</h3></div>
+          <p>从主播采集画面到观众看到直播，采集、编码、网络传输、播放缓冲和解码渲染都会消耗时间。把这些耗时加起来，就是最终的端到端延迟。</p>
+        </div>
+        <figure class="stage4-wide-figure dark">
+          <picture><source srcset="https://acgay.oss-cn-hangzhou.aliyuncs.com/livestream-lab/releases/08437ecd3ab8/assets/images/stage4/journey/latency-budget-tunnel.webp" type="image/webp"><img src="https://acgay.oss-cn-hangzhou.aliyuncs.com/livestream-lab/releases/08437ecd3ab8/assets/images/stage4/journey/latency-budget-tunnel-fallback.jpg" alt="媒体旅行者穿过由多个时钟闸门组成的延迟隧道"></picture>
+          <figcaption><span data-icon="latency"></span><div><b>每一道闸门都拿走一点时间</b><p>端到端延迟要按链路拆预算，再优先处理最大且可控的部分。</p></div></figcaption>
+        </figure>
+        <section class="term-explainer" data-term-set="stage4-latency"></section>
+        <div class="lab-card inverted stage4-latency-lab">
+          <div class="lab-header"><div><span class="lab-tag">动手实验 1</span><h4>给五个环节分配延迟预算</h4></div><span class="lab-score">教学估算器</span></div>
+          <div class="stage4-latency-controls">
+            <label>采集排队 <output id="stage4CaptureDelayOut">80 ms</output><input id="stage4CaptureDelay" type="range" min="0" max="400" value="80" step="20"></label>
+            <label>编码处理 <output id="stage4EncodeDelayOut">180 ms</output><input id="stage4EncodeDelay" type="range" min="0" max="800" value="180" step="20"></label>
+            <label>网络传输 <output id="stage4NetworkDelayOut">240 ms</output><input id="stage4NetworkDelay" type="range" min="0" max="1200" value="240" step="20"></label>
+            <label>播放缓冲 <output id="stage4BufferDelayOut">2000 ms</output><input id="stage4BufferDelay" type="range" min="0" max="6000" value="2000" step="100"></label>
+            <label>解码渲染 <output id="stage4RenderDelayOut">100 ms</output><input id="stage4RenderDelay" type="range" min="0" max="500" value="100" step="20"></label>
+          </div>
+          <div class="stage4-latency-bars" id="stage4LatencyBars"></div>
+          <div class="stage4-latency-summary"><div><span>端到端估算</span><b id="stage4LatencyTotal"></b></div><div><span>分诊灯</span><b id="stage4LatencyLevel"></b></div><p id="stage4LatencyHint"></p></div>
+        </div>
+      </article>
+
+      <article class="lesson stage4-stutter-lesson" id="stage4-stutter">
+        <div class="lesson-heading two-column-heading">
+          <div><span class="lesson-no">03 — STUTTER MONITOR</span><h3>卡顿：缓冲水库为什么突然见底</h3></div>
+          <p>网络送货忽快忽慢、连续丢包和设备解码过载都能让画面卡，但它们留下的指标形状不一样。</p>
+        </div>
+        <figure class="stage4-wide-figure light">
+          <picture><source srcset="https://acgay.oss-cn-hangzhou.aliyuncs.com/livestream-lab/releases/08437ecd3ab8/assets/images/stage4/journey/stutter-heart-monitor.webp" type="image/webp"><img src="https://acgay.oss-cn-hangzhou.aliyuncs.com/livestream-lab/releases/08437ecd3ab8/assets/images/stage4/journey/stutter-heart-monitor-fallback.jpg" alt="媒体旅行者观察连接缓冲水库的卡顿心电监护仪"></picture>
+          <figcaption><span data-icon="buffer"></span><div><b>先分清“没送到”还是“来不及吃”</b><p>缓冲见底更像供给问题；数据充足但掉帧上涨，更像解码和渲染压力。</p></div></figcaption>
+        </figure>
+        <section class="term-explainer" data-term-set="stage4-network"></section>
+        <div class="lab-card stage4-stutter-lab">
+          <div class="lab-header"><div><span class="lab-tag">动手实验 2</span><h4>切换病因，观察同一个播放器怎样反应</h4></div><span class="lab-score">BUFFER ECG</span></div>
+          <div class="stage4-stutter-modes" id="stage4StutterModes"><button type="button" class="active" data-mode="stable">稳定送达</button><button type="button" data-mode="jitter">网络抖动</button><button type="button" data-mode="loss">连续丢包</button><button type="button" data-mode="decode">解码过载</button></div>
+          <div class="stage4-stutter-monitor" id="stage4StutterMonitor" data-mode="stable">
+            <div class="stage4-flow-track">
+              <section class="stage4-flow-stop stage4-network-stop">
+                <header><small>01 · NETWORK</small><b>网络送货</b><span id="stage4NetworkState">均匀到达</span></header>
+                <div class="stage4-packet-road" id="stage4PacketRoad" aria-label="媒体数据包传输动画"></div>
+              </section>
+              <i class="stage4-flow-arrow" aria-hidden="true">→</i>
+              <section class="stage4-flow-stop stage4-buffer-stop">
+                <header><small>02 · BUFFER</small><b>缓冲仓库</b><span id="stage4BufferState">水位稳定</span></header>
+                <div class="stage4-buffer-tank" id="stage4BufferTank"><span id="stage4BufferWater"></span><i></i><small>安全水位</small></div>
+              </section>
+              <i class="stage4-flow-arrow" aria-hidden="true">→</i>
+              <section class="stage4-flow-stop stage4-decode-stop">
+                <header><small>03 · DECODER</small><b>解码工位</b><span id="stage4DecoderState">及时处理</span></header>
+                <div class="stage4-decoder-worker" id="stage4DecoderWorker"><i></i><i></i><b>DECODER</b><span></span><span></span><span></span></div>
+              </section>
+              <i class="stage4-flow-arrow" aria-hidden="true">→</i>
+              <section class="stage4-flow-stop stage4-screen-stop">
+                <header><small>04 · SCREEN</small><b>观众画面</b><span id="stage4ScreenState">连续播放</span></header>
+                <div class="stage4-viewer-screen" id="stage4ViewerScreen"><span></span><i></i><b id="stage4ScreenBadge">流畅</b></div>
+              </section>
+            </div>
+            <div class="stage4-cause-callout"><small>故障发生在</small><b id="stage4CauseTitle">链路正常</b><p id="stage4CauseStory">包裹均匀送到，缓冲仓库保持水位，解码工位也能及时处理。</p></div>
+          </div>
+          <div class="stage4-signal-panels" aria-label="三类关键指标的同步变化">
+            <section><header><span>数据到达间隔</span><b id="stage4ArrivalShape">均匀</b></header><div class="stage4-mini-chart arrival" id="stage4ArrivalWave"></div><small>柱越高，代表下一批数据等得越久</small></section>
+            <section><header><span>播放缓冲水位</span><b id="stage4BufferShape">稳定</b></header><div class="stage4-mini-chart buffer" id="stage4BufferWave"></div><small>接近底部时，画面即将停住</small></section>
+            <section><header><span>解码掉帧累计</span><b id="stage4DropShape">几乎不变</b></header><div class="stage4-mini-chart drop" id="stage4DropWave"></div><small>持续向上，说明设备处理不完</small></section>
+          </div>
+          <label class="stage4-buffer-control">播放器缓冲 <output id="stage4StutterBufferOut">2.0 秒</output><input id="stage4StutterBuffer" type="range" min="0.5" max="5" value="2" step="0.5"></label>
+          <div class="stage4-stutter-stats"><div><span>到达节奏</span><b id="stage4StutterArrival"></b></div><div><span>卡顿风险</span><b id="stage4StutterRisk"></b></div><div><span>掉帧观察</span><b id="stage4DroppedFrames"></b></div><p id="stage4StutterHint"></p></div>
+        </div>
+      </article>
+
+      <article class="lesson dark-lesson stage4-metrics-lesson" id="stage4-metrics">
+        <div class="lesson-heading two-column-heading">
+          <div><span class="lesson-no">04 — METRIC READING</span><h3>指标不是答案，是一张张检查片</h3></div>
+          <p>把输入 FPS、队列、丢包、缓冲、掉帧和音画差放到同一时间轴，才能看出故障从哪里开始传播。</p>
+        </div>
+        <figure class="stage4-wide-figure dark">
+          <picture><source srcset="https://acgay.oss-cn-hangzhou.aliyuncs.com/livestream-lab/releases/08437ecd3ab8/assets/images/stage4/journey/metrics-control-room.webp" type="image/webp"><img src="https://acgay.oss-cn-hangzhou.aliyuncs.com/livestream-lab/releases/08437ecd3ab8/assets/images/stage4/journey/metrics-control-room-fallback.jpg" alt="媒体旅行者在观测控制室用放大镜检查多张指标图"></picture>
+          <figcaption><span data-icon="bitrate"></span><div><b>先看形状和先后，再解释数值</b><p>阈值会因业务而变；持续上涨、同步突变和范围差异通常比孤立数字更有意义。</p></div></figcaption>
+        </figure>
+        <section class="term-explainer" data-term-set="stage4-metrics"></section>
+        <section class="stage4-metric-reader" aria-label="直播指标互动读片">
+          <div class="stage4-metric-head"><span>知识讲解 · 指标挂号单</span><h4>点开六张检查片，学习它们能证明什么</h4></div>
+          <div class="stage4-metric-cards" id="stage4MetricCards"></div>
+          <div class="stage4-metric-detail" id="stage4MetricDetail" aria-live="polite"></div>
+        </section>
+        <div class="knowledge-callout"><span class="callout-icon" data-icon="warning"></span><p><b>相关不等于因果。</b>CPU 和卡顿同时升高，只说明值得进一步验证；还需要找到处理速度、队列或掉帧等中间证据。</p></div>
+      </article>
+
+      <article class="lesson stage4-sync-lesson" id="stage4-sync">
+        <div class="lesson-heading two-column-heading">
+          <div><span class="lesson-no">05 — A/V SYNC</span><h3>音画不同步：让嘴型和声音回到同一拍</h3></div>
+          <p>播放器按时间戳安排音视频登场。固定偏差可以补偿验证，持续漂移则要回到 PTS 和时钟源。</p>
+        </div>
+        <figure class="stage4-wide-figure light">
+          <picture><source srcset="https://acgay.oss-cn-hangzhou.aliyuncs.com/livestream-lab/releases/08437ecd3ab8/assets/images/stage4/journey/av-sync-calibration.webp" type="image/webp"><img src="https://acgay.oss-cn-hangzhou.aliyuncs.com/livestream-lab/releases/08437ecd3ab8/assets/images/stage4/journey/av-sync-calibration-fallback.jpg" alt="媒体旅行者在校准室把视频嘴型和音频波形对齐到同一时间轴"></picture>
+          <figcaption><span data-icon="timestamp"></span><div><b>不是让两条轨道同时收到，而是让它们按 PTS 同时呈现</b><p>网络到达时间、解码完成时间和最终播放时间是三件不同的事。</p></div></figcaption>
+        </figure>
+        <section class="term-explainer" data-term-set="stage4-sync"></section>
+        <div class="lab-card stage4-sync-lab">
+          <div class="lab-header"><div><span class="lab-tag">动手实验 3</span><h4>模拟播放器的音画同步模块，根据 PTS 调整播放时间</h4></div><span class="lab-score">SYNC CALIBRATION</span></div>
+          <div class="stage4-sync-mission">
+            <div><small>你扮演</small><b>播放器的音画同步模块</b></div><i>→</i>
+            <div><small>你要做</small><b>比较音视频 PTS，判断谁先谁后</b></div><i>→</i>
+            <div><small>完成目标</small><b>调整音频播放偏移，让嘴型和声音对齐</b></div>
+          </div>
+          <div class="stage4-sync-modes" id="stage4SyncModes"><button type="button" class="active" data-case="soundFirst">声音抢跑</button><button type="button" data-case="videoFirst">画面抢跑</button><button type="button" data-case="drift">持续漂移</button></div>
+          <div class="stage4-sync-stage" id="stage4SyncStage">
+            <div class="stage4-mouth"><i></i><span></span></div>
+            <div class="stage4-sync-timeline"><span class="video" id="stage4VideoMarker"><b>VIDEO</b></span><span class="audio" id="stage4AudioMarker"><b>AUDIO</b></span><i></i></div>
+          </div>
+          <label class="stage4-sync-control">音频播放偏移量（在 PTS 基础上增加或减少） <output id="stage4SyncCorrectionOut">0 ms</output><input id="stage4SyncCorrection" type="range" min="-500" max="500" value="0" step="20"></label>
+          <div class="stage4-sync-stats"><div><span>校正后音画差</span><b id="stage4SyncDiff"></b></div><div><span>会诊判断</span><b id="stage4SyncDiagnosis"></b></div><p id="stage4SyncHint"></p></div>
+        </div>
+      </article>
+
+      <article class="lesson stage4-incident-lesson" id="stage4-incidents">
+        <div class="lesson-heading two-column-heading">
+          <div><span class="lesson-no">06 — INCIDENT WAR ROOM</span><h3>五份病历，找到第一条异常证据</h3></div>
+          <p>每份病历都有很多数字，但只有少数能解释症状。先用影响范围缩小链路，再选择第一检查动作。</p>
+        </div>
+        <figure class="stage4-wide-figure light">
+          <picture><source srcset="https://acgay.oss-cn-hangzhou.aliyuncs.com/livestream-lab/releases/08437ecd3ab8/assets/images/stage4/journey/incident-war-room.webp" type="image/webp"><img src="https://acgay.oss-cn-hangzhou.aliyuncs.com/livestream-lab/releases/08437ecd3ab8/assets/images/stage4/journey/incident-war-room-fallback.jpg" alt="媒体旅行者在事故作战室的端到端链路上隔离红色故障节点"></picture>
+          <figcaption><span data-icon="network"></span><div><b>先隔离第一处异常，再追上下游</b><p>修复动作必须能解释症状、范围和证据，而不是碰巧让红灯熄灭。</p></div></figcaption>
+        </figure>
+        <div class="diagnostic-chain stage4-diagnostic-chain"><span>采集</span><i>→</i><span>编码</span><i>→</i><span>发布/分发</span><i>→</i><span>网络</span><i>→</i><span>播放器</span><i>→</i><span>渲染/同步</span></div>
+        <section class="term-explainer" data-term-set="stage4-incident"></section>
+        <div class="lab-card stage4-incident-lab-card">
+          <div class="lab-header"><div><span class="lab-tag">动手实验 4</span><h4>五起直播急诊，选择第一检查动作</h4></div><span class="lab-score" id="stage4IncidentScore">0 / 5</span></div>
+          <div class="incident-lab stage4-incident-lab"><div class="incident-list" id="stage4IncidentList"></div><section class="evidence-panel stage4-evidence-panel"><span>DIAGNOSTIC REPORT</span><h4 id="stage4EvidenceTitle"></h4><p id="stage4EvidenceScope"></p><pre id="stage4EvidenceLog"></pre><small id="stage4EvidenceClue"></small><div class="evidence-options" id="stage4EvidenceOptions"></div><div class="feedback" id="stage4IncidentFeedback" role="status"></div></section></div>
+        </div>
+      </article>
+
+      <article class="lesson checkpoint stage4-checkpoint">
+        <div class="checkpoint-head"><span>STAGE 04 · CHECKPOINT</span><h3>第四阶段，急诊出科考试</h3><p>15 题全对，证明你能把症状、指标和第一检查动作连成一条证据链。</p></div>
+        <div class="stage4-readiness"><div><small>分诊</small><b>症状 + 范围 + 时间</b><p>先把“卡”翻译成可验证的诊断输入。</p></div><div><small>证据</small><b>指标 + 日志 + 协议事实</b><p>对齐时间线，寻找第一处异常和传播顺序。</p></div><div><small>闭环</small><b>实验 + 验证 + 预防</b><p>恢复不等于根因，复盘要留下长期修复。</p></div></div>
+        <form class="quiz" id="stage4Quiz"><div class="quiz-questions" id="stage4QuizQuestions"></div><button class="primary-button" type="submit">提交答案，完成阶段 04</button><div class="feedback" id="stage4QuizFeedback" role="status"></div></form>
+      </article>
+    </section>
+
+    <section class="stage" id="stage-5" data-stage="5">
+      <div class="stage5-hero">
+        <div class="stage5-hero-copy">
+          <div class="eyebrow"><span>STAGE 05</span><i></i>直播架构总装厂 · 最终阶段</div>
+          <h2>把前四阶段，<br><em>装成一套系统。</em></h2>
+          <p>这一次你不再只盯一帧画面，而是担任直播架构师：决定怎样接入、转码、封装、分发、容灾和观测，并亲手把主播登录、OBS 推流一路接到观众屏幕。</p>
+          <div class="hero-actions"><button class="primary-button" data-scroll="stage5-overview">进入总装厂 <span>↓</span></button><span class="time-chip">TIME / 建议 85 分钟</span></div>
+        </div>
+        <div class="stage5-hero-visual" aria-label="生产级直播架构缩略图">
+          <div class="stage5-hero-node source"><small>01</small><b>主播</b></div><i>→</i>
+          <div class="stage5-hero-node core"><small>02</small><b>媒体核心</b><span></span></div><i>→</i>
+          <div class="stage5-hero-node ladder"><small>03</small><b>多档转码</b><span></span><span></span><span></span></div><i>→</i>
+          <div class="stage5-hero-node edge"><small>04</small><b>CDN / P2P</b></div><i>→</i>
+          <div class="stage5-hero-node viewers"><small>05</small><b>观众</b></div>
+          <div class="stage5-hero-radar"><span></span><b>OBSERVABILITY ONLINE</b></div>
+        </div>
+      </div>
+      <nav class="stage5-lesson-nav" aria-label="第五阶段课内导航">
+        <button type="button" data-scroll="stage5-overview"><small>01</small>架构蓝图</button>
+        <button type="button" data-scroll="stage5-ladder"><small>02</small>转码梯子</button>
+        <button type="button" data-scroll="stage5-distribution"><small>03</small>分发调度</button>
+        <button type="button" data-scroll="stage5-capacity"><small>04</small>容量成本</button>
+        <button type="button" data-scroll="stage5-resilience"><small>05</small>容灾观测</button>
+        <button type="button" data-scroll="stage5-real-chain"><small>06</small>搭真实链路</button>
+        <button type="button" data-scroll="stage5-capstone"><small>07</small>架构挑战</button>
+      </nav>
+
+      <article class="lesson stage5-overview" id="stage5-overview">
+        <div class="lesson-heading two-column-heading">
+          <div><span class="lesson-no">01 — ARCHITECTURE BLUEPRINT</span><h3>先画数据怎么走，再决定机器放哪里</h3></div>
+          <p>生产架构不是把热门组件堆在一起。每一层都要回答：输入是什么、输出是什么、容量边界在哪里、失败后由谁接替。</p>
+        </div>
+        <div class="stage5-architecture-rule">
+          <div><small>数据面</small><b>真正搬运音视频</b><p>采集、编码、封装、源站、CDN、P2P 和播放器。</p></div>
+          <i>+</i>
+          <div><small>控制面</small><b>决定数据往哪里走</b><p>鉴权、调度、配置、流量切换和发布管理。</p></div>
+          <i>+</i>
+          <div><small>观测面</small><b>证明每一层是否健康</b><p>指标、日志、追踪、QoE、告警和成本。</p></div>
+        </div>
+        <section class="term-explainer" data-term-set="stage5-blueprint"></section>
+        <section class="lab-card stage5-blueprint-lab" aria-label="生产级直播架构六站讲解">
+          <div class="lab-header"><div><span class="lab-tag">知识讲解 · 架构六站</span><h4>跟着一场直播，从入口走到观众屏幕</h4></div><span class="lab-score" id="stage5BlueprintCounter">01 / 06</span></div>
+          <div class="stage5-blueprint-steps" id="stage5BlueprintSteps"></div>
+          <div class="stage5-blueprint-detail" id="stage5BlueprintDetail" aria-live="polite"></div>
+          <div class="guided-controls stage5-blueprint-controls"><button class="secondary-button" id="stage5BlueprintPrev" type="button">上一站</button><button class="secondary-button" id="stage5BlueprintAuto" type="button">自动巡检</button><button class="primary-button small" id="stage5BlueprintNext" type="button">下一站</button></div>
+        </section>
+      </article>
+
+      <article class="lesson dark-lesson stage5-ladder-lesson" id="stage5-ladder">
+        <div class="lesson-heading two-column-heading">
+          <div><span class="lesson-no">02 — ABR LADDER</span><h3>一条高清源流，为什么要变成多档画质</h3></div>
+          <p>观众的屏幕和网络不同。转码梯子把同一内容生产成多种分辨率和码率，播放器才能根据实时带宽切换，而不是让所有人硬扛最高档。</p>
+        </div>
+        <div class="stage5-teach-strip">
+          <div><small>输入</small><b>1080p 源流</b><p>保留一份高质量主源。</p></div><i>→</i>
+          <div><small>转码</small><b>1080 / 720 / 480 / 360</b><p>每档都要消耗计算资源。</p></div><i>→</i>
+          <div><small>ABR 播放</small><b>播放器按网络切换</b><p>目标是少卡顿，不是永远最高画质。</p></div>
+        </div>
+        <section class="term-explainer" data-term-set="stage5-abr"></section>
+        <div class="lab-card inverted stage5-ladder-lab">
+          <div class="lab-header"><div><span class="lab-tag">动手实验 1</span><h4>搭一架能覆盖不同网络的转码梯子</h4></div><span class="lab-score">点击档位启用或停用</span></div>
+          <div class="stage5-profile-grid" id="stage5ProfileGrid"></div>
+          <div class="stage5-audience-grid" id="stage5AudienceGrid"></div>
+          <div class="stage5-ladder-stats"><div><span>启用档位</span><b id="stage5ProfileCount"></b></div><div><span>聚合输出码率</span><b id="stage5AggregateBitrate"></b></div><div><span>网络覆盖</span><b id="stage5Coverage"></b></div><p id="stage5LadderHint"></p></div>
+        </div>
+        <div class="knowledge-callout dark"><span class="callout-icon" data-icon="warning"></span><p><b>多一档不是免费。</b>它会增加转码计算、存储/封装对象、CDN 流量组合和监控维度；档位要由真实终端与网络分布决定。</p></div>
+      </article>
+
+      <article class="lesson stage5-distribution-lesson" id="stage5-distribution">
+        <div class="lesson-heading two-column-heading">
+          <div><span class="lesson-no">03 — DELIVERY ORCHESTRATION</span><h3>CDN 是主干，P2P 是协助，多路分发要能随时切换</h3></div>
+          <p>单一出口简单，但故障面大。生产系统会在 CDN A、CDN B 和 P2P 之间调度流量，并为节点故障、区域异常和 P2P 不可用准备回退路径。</p>
+        </div>
+        <section class="term-explainer" data-term-set="stage5-routing"></section>
+        <div class="lab-card stage5-routing-lab">
+          <div class="lab-header"><div><span class="lab-tag">动手实验 2 · 分发控制台</span><h4>分配正常流量，再拔掉一条路</h4></div><span class="lab-score">所有百分比均指观众下行</span></div>
+          <div class="stage5-routing-controls"><label>P2P 协助比例 <output id="stage5RoutingP2pOut">20%</output><input id="stage5RoutingP2p" type="range" min="0" max="50" value="20" step="5"></label><label>中心流量中 CDN A 占比 <output id="stage5RoutingCdnAOut">60%</output><input id="stage5RoutingCdnA" type="range" min="0" max="100" value="60" step="5"></label></div>
+          <div class="stage5-routing-map" id="stage5RoutingMap">
+            <div class="origin"><small>ORIGIN SHIELD</small><b>回源保护层</b></div><i>→</i>
+            <div class="routes"><span class="cdn-a">CDN A</span><span class="cdn-b">CDN B</span><span class="p2p">P2P</span></div><i>→</i>
+            <div class="audience"><b>观众</b><span id="stage5RoutingPie"></span></div>
+          </div>
+          <div class="stage5-fault-buttons" id="stage5RoutingFaults"><button type="button" class="active" data-fault="normal">正常运行</button><button type="button" data-fault="cdnA">拔掉 CDN A</button><button type="button" data-fault="p2p">关闭 P2P</button></div>
+          <div class="stage5-routing-stats"><div><span>CDN A</span><b id="stage5CdnAShare"></b></div><div><span>CDN B</span><b id="stage5CdnBShare"></b></div><div><span>P2P</span><b id="stage5P2pShare"></b></div><p id="stage5RoutingHint"></p></div>
+        </div>
+      </article>
+
+      <article class="lesson dark-lesson stage5-capacity-lesson" id="stage5-capacity">
+        <div class="lesson-heading two-column-heading">
+          <div><span class="lesson-no">04 — CAPACITY &amp; COST</span><h3>先算峰值流量，再谈机器和预算</h3></div>
+          <p>并发人数只是起点。平均码率、峰值系数、观看时长、CDN 命中率和 P2P 分担共同决定出口带宽、每小时数据量和回源压力。</p>
+        </div>
+        <section class="term-explainer" data-term-set="stage5-capacity"></section>
+        <div class="lab-card inverted stage5-capacity-lab">
+          <div class="lab-header"><div><span class="lab-tag">动手实验 3 · 容量估算器</span><h4>把一场直播的规模换算成真实流量</h4></div><span class="lab-score">教学估算，忽略协议开销</span></div>
+          <div class="stage5-capacity-controls">
+            <label>同时观看人数 <output id="stage5CapacityViewersOut">50,000 人</output><input id="stage5CapacityViewers" type="range" min="1000" max="200000" value="50000" step="1000"></label>
+            <label>平均播放码率 <output id="stage5CapacityBitrateOut">3.0 Mbps</output><input id="stage5CapacityBitrate" type="range" min="0.5" max="8" value="3" step="0.5"></label>
+            <label>峰值系数 <output id="stage5CapacityPeakOut">1.3×</output><input id="stage5CapacityPeak" type="range" min="1" max="2" value="1.3" step="0.1"></label>
+            <label>边缘命中率 <output id="stage5CapacityHitOut">99%</output><input id="stage5CapacityHit" type="range" min="90" max="100" value="99" step="1"></label>
+          </div>
+          <div class="stage5-capacity-bars" id="stage5CapacityBars"></div>
+          <div class="stage5-capacity-stats"><div><span>峰值观众下行</span><b id="stage5PeakEgress"></b></div><div><span>每小时数据量</span><b id="stage5HourlyData"></b></div><div><span>估算回源</span><b id="stage5OriginEgress"></b></div><p id="stage5CapacityHint"></p></div>
+        </div>
+      </article>
+
+      <article class="lesson stage5-resilience-lesson" id="stage5-resilience">
+        <div class="lesson-heading two-column-heading">
+          <div><span class="lesson-no">05 — RESILIENCE &amp; OBSERVABILITY</span><h3>高可用不是“不会坏”，而是坏了仍知道该走哪条路</h3></div>
+          <p>冗余必须和故障检测、自动切换、验证与回滚成套出现。没有观测的双机，可能只是两台同时出问题却没人知道的机器。</p>
+        </div>
+        <div class="stage5-observe-grid">
+          <div><small>发布</small><b>在线流数 / 建连成功率</b><p>证明主播是否真正进入系统。</p></div><div><small>处理</small><b>编码 FPS / 队列 / 错误率</b><p>证明媒体核心是否跟得上。</p></div><div><small>分发</small><b>命中率 / 回源 / 边缘错误</b><p>证明内容是否稳定送到各地。</p></div><div><small>体验</small><b>首开 / 卡顿 / 延迟 / 掉帧</b><p>证明观众是否真的看得好。</p></div>
+        </div>
+        <section class="term-explainer" data-term-set="stage5-resilience"></section>
+        <div class="lab-card stage5-resilience-lab">
+          <div class="lab-header"><div><span class="lab-tag">动手实验 4 · 故障演练</span><h4>先配置保护，再注入一次故障</h4></div><span class="lab-score" id="stage5ResilienceScore">0 / 5</span></div>
+          <div class="stage5-protection-switches" id="stage5ProtectionSwitches"></div>
+          <div class="stage5-failure-console"><div class="stage5-failure-list" id="stage5FailureList"></div><section><small>DRILL RESULT</small><h4 id="stage5FailureTitle"></h4><p id="stage5FailureStory"></p><div id="stage5FailureRequired"></div><button class="primary-button small" id="stage5RunDrill" type="button">运行演练</button><div class="feedback" id="stage5FailureFeedback" role="status"></div></section></div>
+        </div>
+      </article>
+
+      <article class="lesson dark-lesson stage5-chain-lesson" id="stage5-real-chain">
+        <div class="lesson-heading two-column-heading">
+          <div><span class="lesson-no">06 — BUILD A REAL LIVE CHAIN</span><h3>亲手把一场直播，从登录接到观众屏幕</h3></div>
+          <p>前面学的是零件，这里要把零件按真实先后接起来。每一站都要说清输入、动作、输出和验证证据；选对后才能接通下一段。</p>
+        </div>
+        <section class="stage5-chain-mission" id="stage5ChainMission" aria-label="真实链路搭建任务"></section>
+        <div class="stage5-chain-reality-note">
+          <span data-icon="tip"></span>
+          <div><b>先说清 OBS 与 FFmpeg 的真实关系</b><p>OBS 自己就能完成采集、合成、编码、封装和推流，并会使用 FFmpeg 相关组件；复杂业务也可能额外接独立 FFmpeg 进程做滤镜、转码或中继。教学链路会经过“媒体加工”这一站，但不把外部 FFmpeg 说成所有直播的强制步骤。</p></div>
+        </div>
+        <div class="stage5-chain-primer" aria-label="端到端直播的四段职责">
+          <div><small>01 · 平台控制面</small><b>登录 → 创建场次 → 发放推流凭据</b><p>先确认谁在开播，以及这条流属于哪一场直播。</p></div>
+          <i>→</i>
+          <div><small>02 · 主播媒体面</small><b>OBS → 加工 → 编码 → 封装 → RTMP</b><p>把摄像头和声音变成带时间戳的可传输码流。</p></div>
+          <i>→</i>
+          <div><small>03 · 服务与分发</small><b>Ingest → ABR → HLS → Origin → CDN / P2P</b><p>把一路上行生产成可供十万观众获取的播放产品。</p></div>
+          <i>→</i>
+          <div><small>04 · 观众播放器</small><b>请求 → 缓冲 → Demux → Decode → PTS 同步</b><p>把媒体还原成按正确时间出现的画面和声音，并回传 QoE。</p></div>
+        </div>
+        <section class="lab-card inverted stage5-chain-builder" id="stage5ChainBuilder" aria-label="逐站搭建端到端直播链路">
+          <div class="lab-header"><div><span class="lab-tag">动手实验 5 · 端到端接线台</span><h4>逐站选择正确动作，把信号送到观众屏幕</h4></div><span class="lab-score" id="stage5ChainProgress">00 / 17 已接通</span></div>
+          <div class="stage5-chain-route" id="stage5ChainRoute" aria-label="直播链路搭建进度"></div>
+          <div class="stage5-chain-current" id="stage5ChainCurrent" aria-live="polite"></div>
+          <div class="stage5-chain-controls"><button class="secondary-button" id="stage5ChainReset" type="button">重新搭建</button><button class="primary-button small" id="stage5ChainNext" type="button" disabled>接通下一站</button></div>
+        </section>
+      </article>
+
+      <article class="lesson stage5-capstone-lesson" id="stage5-capstone">
+        <div class="lesson-heading two-column-heading">
+          <div><span class="lesson-no">07 — ARCHITECTURE CAPSTONE</span><h3>五张需求单，选择最合适的直播架构</h3></div>
+          <p>没有一套架构同时做到最低延迟、最低成本、最大规模和最简单运维。先抓业务硬约束，再为失败路径付必要的复杂度。</p>
+        </div>
+        <div class="lab-card stage5-capstone-lab"><div class="lab-header"><div><span class="lab-tag">最终架构挑战</span><h4>不要选最豪华的，选择能解释需求的</h4></div><span class="lab-score" id="stage5CapstoneScore">0 / 5</span></div><div class="stage5-capstone-grid" id="stage5CapstoneGrid"></div><div class="feedback" id="stage5CapstoneFeedback" role="status"></div></div>
+      </article>
+
+      <article class="lesson checkpoint stage5-checkpoint">
+        <div class="checkpoint-head"><span>STAGE 05 · FINAL CHECKPOINT</span><h3>最终阶段，架构交付考试</h3><p>15 题全对，证明你能从一条源流推导出转码、分发、容量、容灾和观测方案。</p></div>
+        <div class="stage5-readiness"><div><small>媒体</small><b>接入 + 转码 + 封装</b><p>让源流变成不同终端可以消费的产品。</p></div><div><small>分发</small><b>CDN + P2P + 回源保护</b><p>让规模增长时源站仍保持可控。</p></div><div><small>可靠性</small><b>冗余 + 切换 + 观测</b><p>让故障可发现、可绕行、可验证。</p></div><div><small>决策</small><b>体验 + 容量 + 成本</b><p>用业务约束选择复杂度，而不是堆组件。</p></div></div>
+        <form class="quiz" id="stage5Quiz"><div class="quiz-questions" id="stage5QuizQuestions"></div><button class="primary-button" type="submit">提交答案，完成阶段 05</button><div class="feedback" id="stage5QuizFeedback" role="status"></div></form>
+      </article>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status"></div>
+  <script type="module" src="src/js/app.js?v=20260730-22"></script>
+</body>
+</html>

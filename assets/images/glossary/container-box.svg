@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-labelledby="title desc">
+  <title id="title">不同媒体轨道装进一个快递箱</title><desc id="desc">视频画面、音频波形和时间轴三种卡片飞入同一个打开的快递箱。</desc>
+  <defs><linearGradient id="bg"><stop stop-color="#17242b"/><stop offset="1" stop-color="#0b1014"/></linearGradient><filter id="s"><feDropShadow dx="0" dy="11" stdDeviation="10" flood-opacity=".4"/></filter></defs>
+  <rect width="640" height="360" fill="url(#bg)"/>
+  <g transform="translate(80 45)" filter="url(#s)">
+    <g transform="rotate(-7 70 60)"><rect width="142" height="94" rx="8" fill="#45d5e8"/><rect x="13" y="14" width="116" height="55" rx="4" fill="#15353c"/><circle cx="74" cy="42" r="18" fill="#ff6a2a"/><path d="M15 78h84" stroke="#15353c" stroke-width="7"/></g>
+    <g transform="translate(195 2) rotate(4 70 60)"><rect width="142" height="94" rx="8" fill="#ff6a2a"/><path d="M16 48c14-43 28 43 42 0s28 43 42 0 28 43 34 0" fill="none" stroke="#35160d" stroke-width="6"/></g>
+    <g transform="translate(390 15) rotate(8 70 60)"><rect width="142" height="94" rx="8" fill="#a6ef67"/><path d="M18 24h106M18 48h106M18 72h106" stroke="#253b13" stroke-width="5"/><circle cx="42" cy="24" r="9" fill="#253b13"/><circle cx="88" cy="48" r="9" fill="#253b13"/><circle cx="62" cy="72" r="9" fill="#253b13"/></g>
+  </g>
+  <g transform="translate(155 158)" filter="url(#s)">
+    <path d="M0 40l164-40 166 40-165 47z" fill="#d59a56"/>
+    <path d="M0 40l165 47v140L0 171z" fill="#b9773e"/>
+    <path d="M330 40L165 87v140l165-55z" fill="#96572f"/>
+    <path d="M0 40l-55 64 160 52 60-69z" fill="#e5ae67"/>
+    <path d="M330 40l55 64-160 52-60-69z" fill="#c98545"/>
+    <rect x="124" y="168" width="82" height="34" rx="3" fill="#f1eee7" opacity=".85"/>
+  </g>
+  <g stroke="#ffb077" stroke-width="4" stroke-dasharray="7 8" fill="none"><path d="M150 118c25 36 62 52 108 59"/><path d="M285 112c7 28 21 48 43 61"/><path d="M476 124c-20 29-45 44-74 51"/></g>
+</svg>

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-labelledby="title desc">
+  <title id="title">快速翻动的逐帧动画书</title><desc id="desc">多张纸上小球的位置逐步变化，快速翻页后形成连续运动。</desc>
+  <defs><filter id="s"><feDropShadow dx="0" dy="10" stdDeviation="8" flood-opacity=".35"/></filter><linearGradient id="bg"><stop stop-color="#182229"/><stop offset="1" stop-color="#0d1115"/></linearGradient></defs>
+  <rect width="640" height="360" fill="url(#bg)"/>
+  <g transform="translate(88 50)" filter="url(#s)">
+    <g transform="translate(72 15) rotate(8 205 125)"><rect width="410" height="250" rx="8" fill="#bdb8ae"/></g>
+    <g transform="translate(52 10) rotate(5 205 125)"><rect width="410" height="250" rx="8" fill="#d4d0c7"/><circle cx="280" cy="118" r="24" fill="#ffb077"/></g>
+    <g transform="translate(28 5) rotate(2 205 125)"><rect width="410" height="250" rx="8" fill="#e6e2da"/><circle cx="230" cy="118" r="24" fill="#ff8a50"/></g>
+    <g><rect width="410" height="250" rx="8" fill="#f3efe7"/><path d="M35 186h340" stroke="#b8b2a8" stroke-width="3"/><circle cx="175" cy="118" r="25" fill="#ff6a2a"/><path d="M90 118h46M112 98h34M122 138h24" stroke="#ff6a2a" stroke-opacity=".35" stroke-width="5" stroke-linecap="round"/><rect x="18" y="24" width="20" height="205" rx="4" fill="#22272c"/></g>
+  </g>
+  <g fill="none" stroke="#45d5e8" stroke-width="4" stroke-linecap="round" opacity=".8"><path d="M507 75c37 18 57 46 59 84"/><path d="M554 146l13 15 11-18"/></g>
+  <g transform="translate(500 212)"><circle cx="0" cy="0" r="9" fill="#ff6a2a" opacity=".3"/><circle cx="32" cy="0" r="13" fill="#ff6a2a" opacity=".5"/><circle cx="70" cy="0" r="17" fill="#ff6a2a" opacity=".7"/><circle cx="116" cy="0" r="22" fill="#ff6a2a"/></g>
+</svg>
