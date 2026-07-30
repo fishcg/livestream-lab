@@ -733,7 +733,7 @@ input[type="range"] { grid-column: 1 / -1; width: 100%; accent-color: var(--oran
 .stage5-checkpoint { background: linear-gradient(135deg,#a6ef67,#63c788); color: #102010; }.stage5-readiness { display: grid; grid-template-columns: repeat(4,1fr); gap: 1px; margin-bottom: 26px; background: rgba(0,0,0,.2); }.stage5-readiness > div { padding: 19px; background: rgba(255,255,255,.2); }.stage5-readiness small { font: 8px var(--mono); }.stage5-readiness b { display: block; margin: 7px 0; font-size: 12px; }.stage5-readiness p { margin: 0; font-size: 9px; line-height: 1.65; }
 .term-explainer { margin: 28px 0; overflow: hidden; border: 1px solid #30363d; border-radius: 7px; background: #12161b; color: #eef0f2; box-shadow: 0 18px 50px rgba(0,0,0,.13); }
 .term-explainer-head { display: grid; grid-template-columns: minmax(0,1fr) minmax(280px,.75fr); align-items: end; gap: 35px; padding: 25px 28px 22px; border-bottom: 1px solid var(--line); }
-.term-explainer-head span { color: var(--orange); font: 9px var(--mono); letter-spacing: .08em; }
+.term-explainer-head span { color: var(--orange); font: 500 13px/1.45 var(--mono); letter-spacing: .06em; }
 .term-explainer-head h4 { margin: 8px 0 0; color: #fff; font-size: 25px; letter-spacing: -.035em; }
 .term-explainer-head p { margin: 0; color: #929aa2; font-size: 12px; line-height: 1.75; }
 .term-explainer-tabs { display: flex; gap: 1px; overflow-x: auto; padding: 0 16px; border-bottom: 1px solid var(--line); scrollbar-width: thin; scrollbar-color: #414952 transparent; }
@@ -832,6 +832,7 @@ input[type="range"] { grid-column: 1 / -1; width: 100%; accent-color: var(--oran
   .hero-actions { align-items: flex-start; flex-direction: column; }
   .lesson { padding: 55px 20px; }
   .term-explainer-head { grid-template-columns: 1fr; gap: 10px; padding: 21px 18px 18px; }
+  .term-explainer-head span { font-size: 12px; }
   .term-explainer-head h4 { font-size: 22px; }
   .term-explainer-tabs { padding-inline: 7px; }
   .term-explainer-tab { min-width: 108px; padding: 12px 10px 11px; }

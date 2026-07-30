@@ -1,6 +1,6 @@
 import { initFfmpegCommandLab } from './command.js?v=20260729-8';
 import { initStage2Diagnostics } from './diagnostics.js?v=20260729-8';
-import { initPublishLesson } from './publish.js?v=20260729-8';
+import { initPublishLesson } from './publish.js?v=20260730-9';
 import { initStage2Quiz } from './quiz.js?v=20260729-8';
 import { initSrsLesson } from './srs.js?v=20260729-8';
 import { initStage2Tour } from './tour.js?v=20260729-8';

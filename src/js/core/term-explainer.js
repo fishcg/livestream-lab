@@ -1,5 +1,7 @@
 import { TERMS, TERM_SETS } from '../data/term-dictionary.js?v=20260730-1';
 
+export const TERM_EXPLAINER_CHANGE_EVENT = 'livelab:term-explainer-change';
+
 function escapeHtml(value) {
   return String(value)
     .replaceAll('&', '&amp;')
@@ -32,6 +34,7 @@ function renderDetail(root, set, selectedIndex) {
     button.classList.toggle('active', selected);
     button.setAttribute('aria-selected', String(selected));
   });
+  root.dataset.selectedTermIndex = String(selectedIndex);
 
   detail.innerHTML = `
     <div class="term-explainer-visual">
@@ -47,6 +50,29 @@ function renderDetail(root, set, selectedIndex) {
       </dl>
     </div>
   `;
+}
+
+function selectTerm(root, set, selectedIndex, emitChange = false) {
+  const safeIndex = Math.min(Math.max(Number(selectedIndex) || 0, 0), set.terms.length - 1);
+  renderDetail(root, set, safeIndex);
+  if (!emitChange) return;
+  root.dispatchEvent(new CustomEvent(TERM_EXPLAINER_CHANGE_EVENT, {
+    bubbles: true,
+    detail: {
+      termSet: root.dataset.termSet,
+      termKey: set.terms[safeIndex],
+      index: safeIndex
+    }
+  }));
+}
+
+export function setTermExplainerSelection(termSet, selectedIndex, options = {}) {
+  const root = [...document.querySelectorAll('[data-term-set]')]
+    .find((item) => item.dataset.termSet === termSet);
+  const set = TERM_SETS[termSet];
+  if (!root || !set || !root.querySelector('.term-explainer-detail')) return false;
+  selectTerm(root, set, selectedIndex, options.emitChange === true);
+  return true;
 }
 
 function mountTermExplainer(root, index) {
@@ -74,9 +100,9 @@ function mountTermExplainer(root, index) {
   root.addEventListener('click', (event) => {
     const button = event.target.closest('.term-explainer-tab');
     if (!button || !root.contains(button)) return;
-    renderDetail(root, set, Number(button.dataset.termIndex));
+    selectTerm(root, set, Number(button.dataset.termIndex), true);
   });
-  renderDetail(root, set, 0);
+  selectTerm(root, set, 0);
 }
 
 export function initTermExplainers() {

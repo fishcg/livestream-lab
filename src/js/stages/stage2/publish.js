@@ -1,10 +1,14 @@
 import { $, $$ } from '../../core/dom.js';
+import {
+  TERM_EXPLAINER_CHANGE_EVENT,
+  setTermExplainerSelection
+} from '../../core/term-explainer.js?v=20260730-2';
 import { PUBLISH_STEPS } from '../../data/stage2.js?v=20260729-8';
 
 let publishIndex = 0;
 let publishTimer;
 
-function renderPublish() {
+function renderPublish({ syncExplainer = true } = {}) {
   $$('.stage2-publish-step').forEach((button, index) => {
     button.classList.toggle('active', index === publishIndex);
     button.classList.toggle('passed', index < publishIndex);
@@ -17,6 +21,7 @@ function renderPublish() {
   $('#stage2PublishDetail').textContent = item.detail;
   $('#stage2PublishPrev').disabled = publishIndex === 0;
   $('#stage2PublishNext').textContent = publishIndex === PUBLISH_STEPS.length - 1 ? '重新开始' : '下一步';
+  if (syncExplainer) setTermExplainerSelection('stage2-rtmp', publishIndex);
 }
 
 function startPublishReplay() {
@@ -34,6 +39,13 @@ function startPublishReplay() {
 }
 
 export function initPublishLesson() {
+  const termExplainer = document.querySelector('[data-term-set="stage2-rtmp"]');
+  termExplainer?.addEventListener(TERM_EXPLAINER_CHANGE_EVENT, (event) => {
+    if (event.detail?.termSet !== 'stage2-rtmp') return;
+    window.clearInterval(publishTimer);
+    publishIndex = event.detail.index;
+    renderPublish({ syncExplainer: false });
+  });
   $$('.stage2-publish-step').forEach((button, index) => {
     button.addEventListener('click', () => {
       window.clearInterval(publishTimer);
